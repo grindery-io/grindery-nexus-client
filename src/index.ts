@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { Operation, Workflow } from './types';
+import {
+  WorkflowExecution,
+  WorkflowExecutionLog,
+  Operation,
+  Workflow,
+} from './types';
 import { sendEngineRequest } from './utils';
 
 const WEB2_CONNECTORS_PATH =
@@ -190,5 +195,7 @@ class NexusClient {
     return responses.filter(res => res && res.data).map(res => res.data);
   }
 }
+
+export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
 
 export default new NexusClient();
