@@ -28,6 +28,10 @@ const test = async () => {
 
 See full documentation in the [DOCUMENTATION.md](https://github.com/grindery-io/grindery-nexus-client/blob/master/DOCUMENTATION.md) file.
 
+## Development
+
+See [DEVELOPMENT.md](https://github.com/grindery-io/grindery-nexus-client/blob/master/DEVELOPMENT.md) file.
+
 ## License
 
 MIT

@@ -1,5 +1,12 @@
+import axios from 'axios';
 import { Operation, Workflow } from './types';
 import { sendEngineRequest } from './utils';
+
+const WEB2_CONNECTORS_PATH =
+  'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web2';
+
+const WEB3_CONNECTORS_PATH =
+  'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
 
 /**
  * Grindery Nexus Client
@@ -144,6 +151,43 @@ class NexusClient {
       step,
       input,
     });
+  }
+
+  /**
+   * Gets list of available connectors/drivers
+   *
+   * @returns {Promise} - Promise object with an array of connectors/drivers
+   */
+  async getConnectors(): Promise<any> {
+    const responses = [];
+    const web2Connectors = await axios.get(WEB2_CONNECTORS_PATH);
+    for (let i = 0; i < web2Connectors.data.length; i++) {
+      const url = web2Connectors.data[i].download_url;
+      if (url) {
+        responses.push(
+          await axios.get(
+            `${url}${/\?/.test(url) ? '&' : '?'}v=${encodeURIComponent(
+              '2022.07.05v1'
+            )}`
+          )
+        );
+      }
+    }
+    const web3Connectors = await axios.get(WEB3_CONNECTORS_PATH);
+    for (let i = 0; i < web3Connectors.data.length; i++) {
+      const url = web3Connectors.data[i].download_url;
+      if (url) {
+        responses.push(
+          await axios.get(
+            `${url}${/\?/.test(url) ? '&' : '?'}v=${encodeURIComponent(
+              '2022.07.05v1'
+            )}`
+          )
+        );
+      }
+    }
+
+    return responses.filter(res => res && res.data).map(res => res.data);
   }
 }
 

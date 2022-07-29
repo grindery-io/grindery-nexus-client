@@ -14,6 +14,7 @@
     * [.getWorkflowExecutionLog(executionId)](#NexusClient+getWorkflowExecutionLog) ⇒ <code>Promise</code>
     * [.isAllowedUser(userAccountId)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
     * [.testAction(userAccountId, step, input)](#NexusClient+testAction) ⇒ <code>Promise</code>
+    * [.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -122,3 +123,12 @@
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
 
+<a name="NexusClient+getConnectors"></a>
+
+### nexusClient.getConnectors() ⇒ <code>Promise</code>
+<p>Gets list of available connectors/drivers</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with an array of connectors/drivers</li>
+</ul>  
