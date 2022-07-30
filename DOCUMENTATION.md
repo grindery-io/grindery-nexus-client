@@ -15,6 +15,7 @@
     * [.isAllowedUser(userAccountId)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
     * [.testAction(userAccountId, step, input)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * [.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>
+    * [.deleteWorkflow(userAccountId, key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -132,3 +133,18 @@
 **Returns**: <code>Promise</code> - <ul>
 <li>Promise object with an array of connectors/drivers</li>
 </ul>  
+<a name="NexusClient+deleteWorkflow"></a>
+
+### nexusClient.deleteWorkflow(userAccountId, key) ⇒ <code>Promise</code>
+<p>Deletes user's workflow by key</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with <code>deleted</code> property <code>true</code> or <code>false</code></li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+| key | <code>string</code> | <p>Workflow key</p> |
+

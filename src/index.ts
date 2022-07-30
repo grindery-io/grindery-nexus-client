@@ -169,30 +169,41 @@ class NexusClient {
     for (let i = 0; i < web2Connectors.data.length; i++) {
       const url = web2Connectors.data[i].download_url;
       if (url) {
-        responses.push(
-          await axios.get(
-            `${url}${/\?/.test(url) ? '&' : '?'}v=${encodeURIComponent(
-              '2022.07.05v1'
-            )}`
-          )
-        );
+        responses.push(await axios.get(url));
       }
     }
     const web3Connectors = await axios.get(WEB3_CONNECTORS_PATH);
     for (let i = 0; i < web3Connectors.data.length; i++) {
       const url = web3Connectors.data[i].download_url;
       if (url) {
-        responses.push(
-          await axios.get(
-            `${url}${/\?/.test(url) ? '&' : '?'}v=${encodeURIComponent(
-              '2022.07.05v1'
-            )}`
-          )
-        );
+        responses.push(await axios.get(url));
       }
     }
 
     return responses.filter(res => res && res.data).map(res => res.data);
+  }
+
+  /**
+   * Deletes user's workflow by key
+   *
+   * @param {string} userAccountId - User account ID
+   * @param {string} key - Workflow key
+   * @returns {Promise} - Promise object with `deleted` property `true` or `false`
+   */
+  async deleteWorkflow(
+    userAccountId: string,
+    key: string
+  ): Promise<{ deleted: boolean }> {
+    if (!userAccountId) {
+      throw new Error('User account ID is required');
+    }
+    if (!key) {
+      throw new Error('Workflow key is required');
+    }
+    return await sendEngineRequest('or_deleteWorkflow', {
+      userAccountId,
+      key,
+    });
   }
 }
 
