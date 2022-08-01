@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const WORKFLOW_ENGINE_URL = 'https://gnexus-orchestrator.herokuapp.com';
+const WORKFLOW_ENGINE_URL = 'https://orchestrator.grindery.org/';
 
 export const sendEngineRequest = async (method: string, params: unknown) => {
   try {
