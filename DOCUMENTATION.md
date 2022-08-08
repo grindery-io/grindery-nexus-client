@@ -16,6 +16,8 @@
     * [.testAction(userAccountId, step, input)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * [.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>
     * [.deleteWorkflow(userAccountId, key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
+    * [.requestEarlyAccess(userAccountId, email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
+    * [.saveWalletAddress(userAccountId, walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -147,4 +149,35 @@
 | --- | --- | --- |
 | userAccountId | <code>string</code> | <p>User account ID</p> |
 | key | <code>string</code> | <p>Workflow key</p> |
+
+<a name="NexusClient+requestEarlyAccess"></a>
+
+### nexusClient.requestEarlyAccess(userAccountId, email) ⇒ <code>Promise</code>
+<p>Requests early access to Nexus app</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with <code>true</code> on success</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+| email | <code>string</code> | <p>User email</p> |
+
+<a name="NexusClient+saveWalletAddress"></a>
+
+### nexusClient.saveWalletAddress(userAccountId, walletAddress, [email]) ⇒ <code>Promise</code>
+<p>Saves user wallet address in CRM</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with <code>true</code> on success</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+| walletAddress | <code>string</code> | <p>User wallet address</p> |
+| [email] | <code>string</code> | <p>User email, optional</p> |
 

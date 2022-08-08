@@ -205,6 +205,61 @@ class NexusClient {
       key,
     });
   }
+
+  /**
+   * Requests early access to Nexus app
+   *
+   * @param {string} userAccountId - User account ID
+   * @param {string} email - User email
+   * @returns {Promise} - Promise object with `true` on success
+   */
+  async requestEarlyAccess(
+    userAccountId: string,
+    email: string
+  ): Promise<{ deleted: boolean }> {
+    if (!userAccountId) {
+      throw new Error('User account ID is required');
+    }
+    if (!email) {
+      throw new Error('Email is required');
+    }
+    if (!/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
+      throw new Error('Invalid email');
+    }
+    return await sendEngineRequest('or_requestEarlyAccess', {
+      userAccountId,
+      email,
+    });
+  }
+
+  /**
+   * Saves user wallet address in CRM
+   *
+   * @param {string} userAccountId - User account ID
+   * @param {string} walletAddress - User wallet address
+   * @param {string} [email] - User email, optional
+   * @returns {Promise} - Promise object with `true` on success
+   */
+  async saveWalletAddress(
+    userAccountId: string,
+    walletAddress: string,
+    email?: string
+  ): Promise<{ deleted: boolean }> {
+    if (!userAccountId) {
+      throw new Error('User account ID is required');
+    }
+    if (!walletAddress) {
+      throw new Error('Wallet address is required');
+    }
+    if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
+      throw new Error('Invalid email');
+    }
+    return await sendEngineRequest('or_saveWalletAddress', {
+      userAccountId,
+      email,
+      walletAddress,
+    });
+  }
 }
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };

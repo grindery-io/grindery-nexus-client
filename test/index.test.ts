@@ -9,6 +9,8 @@ import {
   mockedConnector,
   mockedWeb2CconnectorsPath,
   mockedWeb3CconnectorsPath,
+  mockedEmail,
+  mockedWalletAddress,
 } from './mock';
 
 jest.mock('axios');
@@ -300,6 +302,99 @@ describe('deleteWorkflow', () => {
     await expect(
       NexusClient.deleteWorkflow(mockedUserAccountId, mockedWorkflowKey)
     ).resolves.toEqual({ deleted: false });
+  });
+});
+
+describe('requestEarlyAccess', () => {
+  it('requires user account ID', async () => {
+    await expect(
+      NexusClient.requestEarlyAccess('', mockedEmail)
+    ).rejects.toMatchObject({
+      message: 'User account ID is required',
+    });
+  });
+
+  it('requires email', async () => {
+    await expect(
+      NexusClient.requestEarlyAccess(mockedUserAccountId, '')
+    ).rejects.toMatchObject({
+      message: 'Email is required',
+    });
+  });
+
+  it('requires email to be valid', async () => {
+    await expect(
+      NexusClient.requestEarlyAccess(mockedUserAccountId, 'invalid@email')
+    ).rejects.toMatchObject({
+      message: 'Invalid email',
+    });
+  });
+
+  it('returns true on success request', async () => {
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(
+      NexusClient.requestEarlyAccess(mockedUserAccountId, mockedEmail)
+    ).resolves.toEqual(true);
+  });
+});
+
+describe('saveWalletAddress', () => {
+  it('requires user account ID', async () => {
+    await expect(
+      NexusClient.saveWalletAddress('', mockedWalletAddress)
+    ).rejects.toMatchObject({
+      message: 'User account ID is required',
+    });
+  });
+
+  it('requires wallet address', async () => {
+    await expect(
+      NexusClient.saveWalletAddress(mockedUserAccountId, '')
+    ).rejects.toMatchObject({
+      message: 'Wallet address is required',
+    });
+  });
+
+  it('requires email to be valid', async () => {
+    await expect(
+      NexusClient.saveWalletAddress(
+        mockedUserAccountId,
+        mockedWalletAddress,
+        'invalid@email'
+      )
+    ).rejects.toMatchObject({
+      message: 'Invalid email',
+    });
+  });
+
+  it('returns true on success request', async () => {
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(
+      NexusClient.saveWalletAddress(mockedUserAccountId, mockedWalletAddress)
+    ).resolves.toEqual(true);
+  });
+
+  it('returns true on success request with valid email', async () => {
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(
+      NexusClient.saveWalletAddress(
+        mockedUserAccountId,
+        mockedWalletAddress,
+        mockedEmail
+      )
+    ).resolves.toEqual(true);
   });
 });
 

@@ -7,6 +7,10 @@ export const mockedWorkflowKey = 'workflow-key';
 
 export const mockedWorkflowExecutionId = '123-456-789';
 
+export const mockedWalletAddress = '0x0000000000000000000000000000000000000001';
+
+export const mockedEmail = 'email@example.com';
+
 export const mockedWeb2CconnectorsPath =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web2';
 
