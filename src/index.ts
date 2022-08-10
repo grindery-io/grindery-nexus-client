@@ -5,7 +5,7 @@ import {
   Operation,
   Workflow,
 } from './types';
-import { sendEngineRequest } from './utils';
+import { sendEngineHTTPRequest, sendEngineRequest } from './utils';
 
 const WEB2_CONNECTORS_PATH =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web2';
@@ -213,10 +213,7 @@ class NexusClient {
    * @param {string} email - User email
    * @returns {Promise} - Promise object with `true` on success
    */
-  async requestEarlyAccess(
-    userAccountId: string,
-    email: string
-  ): Promise<{ deleted: boolean }> {
+  async requestEarlyAccess(userAccountId: string, email: string): Promise<any> {
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -244,7 +241,7 @@ class NexusClient {
     userAccountId: string,
     walletAddress: string,
     email?: string
-  ): Promise<{ deleted: boolean }> {
+  ): Promise<any> {
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -259,6 +256,53 @@ class NexusClient {
       email,
       walletAddress,
     });
+  }
+
+  /**
+   * Sends request to an operation's `inputFieldProviderUrl`
+   *
+   * @param {string} connectorKey - Connector key
+   * @param {string} operationKey - Trigger or Action operation key
+   * @param {object} body - JSON RPC request object with user input
+   * @returns {Promise} - Promise object with operation's field provider response
+   */
+  async callInputProvider(
+    connectorKey: string,
+    operationKey: string,
+    body: any
+  ): Promise<any> {
+    if (!connectorKey) {
+      throw new Error('Connector key is required');
+    }
+    if (!operationKey) {
+      throw new Error('Operation key is required');
+    }
+    if (!body) {
+      throw new Error('JSON RPC request object is required');
+    }
+    if (!body.method || body.method !== 'grinderyNexusConnectorUpdateFields') {
+      throw new Error(
+        'JSON RPC request object must have "method" property with value "grinderyNexusConnectorUpdateFields"'
+      );
+    }
+    if (!body.jsonrpc || body.jsonrpc !== '2.0') {
+      throw new Error('JSON RPC request object must have 2.0 version');
+    }
+    if (!body.params || !body.params.key) {
+      throw new Error(
+        'JSON RPC request object must have "params" property with operation key specified'
+      );
+    }
+    if (body.params.key !== operationKey) {
+      throw new Error(
+        'JSON RPC request object params "key" property must be equal to operationKey'
+      );
+    }
+    return await sendEngineHTTPRequest(
+      'POST',
+      `/input-provider/${connectorKey}/${operationKey}`,
+      body
+    );
   }
 }
 

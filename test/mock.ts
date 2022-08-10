@@ -17,6 +17,15 @@ export const mockedWeb2CconnectorsPath =
 export const mockedWeb3CconnectorsPath =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
 
+export const mockedJsonRpcPayload = {
+  jsonrpc: '2.0',
+  method: 'grinderyNexusConnectorUpdateFields',
+  id: new Date(),
+  params: {
+    key: 'operationKey',
+  },
+};
+
 export const mockedWorkflow: Workflow = {
   title: 'Mocked workflow',
   trigger: {

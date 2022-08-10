@@ -1,6 +1,6 @@
 import axios from 'axios';
 import NexusClient from '../src';
-import { sendEngineRequest } from '../src/utils';
+import { sendEngineHTTPRequest, sendEngineRequest } from '../src/utils';
 import {
   mockedWorkflowKey,
   mockedUserAccountId,
@@ -11,10 +11,15 @@ import {
   mockedWeb3CconnectorsPath,
   mockedEmail,
   mockedWalletAddress,
+  mockedJsonRpcPayload,
 } from './mock';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('createWorkflow method', () => {
   it('requires workflow object', async () => {
@@ -398,6 +403,100 @@ describe('saveWalletAddress', () => {
   });
 });
 
+describe('callInputProvider', () => {
+  it('requires connector key', async () => {
+    await expect(
+      NexusClient.callInputProvider('', '', {})
+    ).rejects.toMatchObject({
+      message: 'Connector key is required',
+    });
+  });
+
+  it('requires operation key', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', '', {})
+    ).rejects.toMatchObject({
+      message: 'Operation key is required',
+    });
+  });
+
+  it('requires JSON RPC request object', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', 'operationKey', false)
+    ).rejects.toMatchObject({
+      message: 'JSON RPC request object is required',
+    });
+  });
+
+  it('requires JSON RPC request object to have method', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+        ...mockedJsonRpcPayload,
+        method: '',
+      })
+    ).rejects.toMatchObject({
+      message:
+        'JSON RPC request object must have "method" property with value "grinderyNexusConnectorUpdateFields"',
+    });
+  });
+
+  it('requires JSON RPC request object to have version 2.0', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+        ...mockedJsonRpcPayload,
+        jsonrpc: '1.0',
+      })
+    ).rejects.toMatchObject({
+      message: 'JSON RPC request object must have 2.0 version',
+    });
+  });
+
+  it('requires JSON RPC request object to have params.key property', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+        ...mockedJsonRpcPayload,
+        params: {
+          key: '',
+        },
+      })
+    ).rejects.toMatchObject({
+      message:
+        'JSON RPC request object must have "params" property with operation key specified',
+    });
+  });
+
+  it('requires JSON RPC request params key property to match operation key', async () => {
+    await expect(
+      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+        ...mockedJsonRpcPayload,
+        params: {
+          key: 'notOperationKey',
+        },
+      })
+    ).rejects.toMatchObject({
+      message:
+        'JSON RPC request object params "key" property must be equal to operationKey',
+    });
+  });
+
+  it('returns input fields schema on success request', async () => {
+    mockedAxios.request.mockResolvedValue({
+      data: {
+        result: {
+          inputFields: [],
+        },
+      },
+    });
+    await expect(
+      NexusClient.callInputProvider(
+        'connectorKey',
+        'operationKey',
+        mockedJsonRpcPayload
+      )
+    ).resolves.toEqual({ inputFields: [] });
+  });
+});
+
 describe('sendEngineRequest utility function', () => {
   it('returns error on failed request', async () => {
     mockedAxios.post.mockRejectedValue(new Error('Something went wrong'));
@@ -407,11 +506,7 @@ describe('sendEngineRequest utility function', () => {
   });
 
   it('returns error message on server error', async () => {
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        error: 'Server error',
-      },
-    });
+    mockedAxios.post.mockRejectedValue(new Error('Server error'));
     await expect(sendEngineRequest('method_name', {})).rejects.toThrow(
       new Error('Server error')
     );
@@ -435,5 +530,44 @@ describe('sendEngineRequest utility function', () => {
       },
     });
     await expect(sendEngineRequest('method_name', {})).resolves.toEqual({});
+  });
+});
+
+describe('sendEngineHTTPRequest utility function', () => {
+  it('returns error on failed request', async () => {
+    mockedAxios.request.mockRejectedValue(new Error('Unknown error'));
+    await expect(sendEngineHTTPRequest('POST', '/path', {})).rejects.toThrow(
+      new Error('Unknown error')
+    );
+  });
+
+  it('returns error message on server error', async () => {
+    mockedAxios.request.mockRejectedValue(new Error('Server error'));
+
+    await expect(sendEngineHTTPRequest('POST', '/path', {})).rejects.toThrow(
+      new Error('Server error')
+    );
+  });
+
+  it('returns unknown error on unexpected response', async () => {
+    mockedAxios.request.mockResolvedValue({
+      data: {
+        something: {},
+      },
+    });
+    await expect(sendEngineHTTPRequest('POST', '/path', {})).rejects.toThrow(
+      new Error('Unknown error')
+    );
+  });
+
+  it('resolves on success request', async () => {
+    mockedAxios.request.mockResolvedValue({
+      data: {
+        result: {},
+      },
+    });
+    await expect(sendEngineHTTPRequest('POST', '/path', {})).resolves.toEqual(
+      {}
+    );
   });
 });
