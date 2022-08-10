@@ -1,6 +1,8 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const WORKFLOW_ENGINE_URL = 'https://orchestrator.grindery.org/';
+
+type ServerError = { error: any };
 
 export const sendEngineRequest = async (method: string, params: unknown) => {
   try {
@@ -19,9 +21,17 @@ export const sendEngineRequest = async (method: string, params: unknown) => {
       throw new Error('Unknown error');
     }
   } catch (error) {
-    if (error.response && error.response.data && error.response.data.error) {
-      throw new Error(error.response.data.error);
+    if (axios.isAxiosError(error)) {
+      const serverError = error as AxiosError<ServerError>;
+      if (
+        serverError.response &&
+        serverError.response.data &&
+        serverError.response.data.error
+      ) {
+        throw new Error(serverError.response.data.error);
+      }
+    } else {
+      throw new Error((error as Error).message);
     }
-    throw new Error((error as Error).message);
   }
 };
