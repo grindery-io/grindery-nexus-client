@@ -38,11 +38,11 @@
   "size-limit": [
     {
       "path": "dist/grindery-nexus-client.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "30 KB"
     },
     {
       "path": "dist/grindery-nexus-client.esm.js",
-      "limit": "10 KB"
+      "limit": "30 KB"
     }
   ],
   "devDependencies": {
