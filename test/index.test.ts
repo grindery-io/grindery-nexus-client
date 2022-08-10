@@ -17,10 +17,6 @@ import {
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('createWorkflow method', () => {
   it('requires workflow object', async () => {
     await expect(
@@ -494,6 +490,45 @@ describe('callInputProvider', () => {
         mockedJsonRpcPayload
       )
     ).resolves.toEqual({ inputFields: [] });
+  });
+});
+
+describe('callWebhook', () => {
+  it('requires connector key', async () => {
+    await expect(NexusClient.callWebhook('', '', {})).rejects.toMatchObject({
+      message: 'Connector key is required',
+    });
+  });
+
+  it('requires operation key', async () => {
+    await expect(
+      NexusClient.callWebhook('connectorKey', '', {})
+    ).rejects.toMatchObject({
+      message: 'Operation key is required',
+    });
+  });
+
+  it('requires body object', async () => {
+    await expect(
+      NexusClient.callWebhook('connectorKey', 'operationKey', false)
+    ).rejects.toMatchObject({
+      message: 'Body object is required',
+    });
+  });
+
+  it('returns JSON RPC object on success request', async () => {
+    mockedAxios.request.mockResolvedValue({
+      data: {
+        result: {
+          jsonrpc: '2.0',
+          result: {},
+          id: '1',
+        },
+      },
+    });
+    await expect(
+      NexusClient.callWebhook('connectorKey', 'operationKey', {})
+    ).resolves.toEqual({ jsonrpc: '2.0', result: {}, id: '1' });
   });
 });
 

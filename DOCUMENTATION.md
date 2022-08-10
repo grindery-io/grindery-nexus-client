@@ -18,6 +18,8 @@
     * [.deleteWorkflow(userAccountId, key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
     * [.requestEarlyAccess(userAccountId, email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
     * [.saveWalletAddress(userAccountId, walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
+    * [.callInputProvider(connectorKey, operationKey, body)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
+    * [.callWebhook(connectorKey, operationKey, body)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -180,4 +182,36 @@
 | userAccountId | <code>string</code> | <p>User account ID</p> |
 | walletAddress | <code>string</code> | <p>User wallet address</p> |
 | [email] | <code>string</code> | <p>User email, optional</p> |
+
+<a name="NexusClient+callInputProvider"></a>
+
+### nexusClient.callInputProvider(connectorKey, operationKey, body) ⇒ <code>Promise</code>
+<p>Sends request to an operation's <code>inputFieldProviderUrl</code></p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with operation's field provider response</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| connectorKey | <code>string</code> | <p>Connector key</p> |
+| operationKey | <code>string</code> | <p>Trigger or Action operation key</p> |
+| body | <code>object</code> | <p>JSON RPC request object with user input</p> |
+
+<a name="NexusClient+callWebhook"></a>
+
+### nexusClient.callWebhook(connectorKey, operationKey, body) ⇒ <code>Promise</code>
+<p>Sends webhook to a trigger</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <ul>
+<li>Promise object with JSON RPC 2.0 response</li>
+</ul>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| connectorKey | <code>string</code> | <p>Connector key</p> |
+| operationKey | <code>string</code> | <p>Trigger operation key</p> |
+| body | <code>object</code> | <p>JSON body</p> |
 

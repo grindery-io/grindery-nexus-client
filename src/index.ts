@@ -304,6 +304,35 @@ class NexusClient {
       body
     );
   }
+
+  /**
+   * Sends webhook to a trigger
+   *
+   * @param {string} connectorKey - Connector key
+   * @param {string} operationKey - Trigger operation key
+   * @param {object} body - JSON body
+   * @returns {Promise} - Promise object with JSON RPC 2.0 response
+   */
+  async callWebhook(
+    connectorKey: string,
+    operationKey: string,
+    body: any
+  ): Promise<any> {
+    if (!connectorKey) {
+      throw new Error('Connector key is required');
+    }
+    if (!operationKey) {
+      throw new Error('Operation key is required');
+    }
+    if (!body) {
+      throw new Error('Body object is required');
+    }
+    return await sendEngineHTTPRequest(
+      'POST',
+      `/webhook/${connectorKey}/${operationKey}`,
+      body
+    );
+  }
 }
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
