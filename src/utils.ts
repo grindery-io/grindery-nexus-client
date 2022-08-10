@@ -19,6 +19,9 @@ export const sendEngineRequest = async (method: string, params: unknown) => {
       throw new Error('Unknown error');
     }
   } catch (error) {
+    if (error.response && error.response.data && error.response.data.error) {
+      throw new Error(error.response.data.error);
+    }
     throw new Error((error as Error).message);
   }
 };
