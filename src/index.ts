@@ -185,12 +185,20 @@ class NexusClient {
       .map(res => ({
         ...res.data,
         html_url:
-          (Array.isArray(web3Connectors) &&
-            web3Connectors.find(c => c.name.includes(res.data.key)) &&
-            web3Connectors.find(c => c.name.includes(res.data.key)).html_url) ||
-          (Array.isArray(web2Connectors) &&
-            web2Connectors.find(c => c.name.includes(res.data.key)) &&
-            web2Connectors.find(c => c.name.includes(res.data.key)).html_url) ||
+          (Array.isArray(web3Connectors.data) &&
+            web3Connectors.data.find(
+              c => c.name && c.name.includes(res.data.key)
+            ) &&
+            web3Connectors.data.find(
+              c => c.name && c.name.includes(res.data.key)
+            ).html_url) ||
+          (Array.isArray(web2Connectors.data) &&
+            web2Connectors.data.find(
+              c => c.name && c.name.includes(res.data.key)
+            ) &&
+            web2Connectors.data.find(
+              c => c.name && c.name.includes(res.data.key)
+            ).html_url) ||
           '',
       }));
   }
