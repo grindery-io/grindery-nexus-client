@@ -57,6 +57,7 @@ export const mockedConnector = {
   name: 'Hello World',
   version: '1.0.0',
   platformVersion: '1.0.0',
+  html_url: '',
   triggers: [
     {
       key: 'helloWorldTrigger',
