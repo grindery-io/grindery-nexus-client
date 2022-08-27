@@ -17,69 +17,145 @@ import {
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+describe('authenticate method', () => {
+  it('requires token', () => {
+    const client = new NexusClient();
+    expect(() => {
+      client.authenticate('');
+    }).toThrow('Token required');
+  });
+
+  it('sets token', () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    expect(client.getToken()).toMatch('userToken');
+  });
+});
+
+describe('getToken method', () => {
+  it('requires token', () => {
+    const client = new NexusClient();
+    expect(() => {
+      return client.getToken();
+    }).toThrow('Authentication required');
+  });
+
+  it('returns token', () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    expect(client.getToken()).toMatch('userToken');
+  });
+});
+
 describe('createWorkflow method', () => {
-  it('requires workflow object', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
       // @ts-ignore
-      NexusClient.createWorkflow()
+      client.createWorkflow()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workflow object', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      // @ts-ignore
+      client.createWorkflow()
     ).rejects.toMatchObject({
       message: 'Workflow object is required',
     });
   });
 
   it('requires workflow to have creator', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.createWorkflow({ ...mockedWorkflow, creator: '' })
+      client.createWorkflow({ ...mockedWorkflow, creator: '' })
     ).rejects.toMatchObject({
       message: 'Workflow creator is required',
     });
   });
 
   it('returns new workflow key on success', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: { result: { key: mockedWorkflowKey } },
     });
-    await expect(NexusClient.createWorkflow(mockedWorkflow)).resolves.toEqual({
+    await expect(client.createWorkflow(mockedWorkflow)).resolves.toEqual({
       key: mockedWorkflowKey,
     });
   });
 });
 
 describe('listWorkflows method', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.listWorkflows()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
   it('requires user account id', async () => {
-    await expect(NexusClient.listWorkflows('')).rejects.toMatchObject({
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.listWorkflows('')).rejects.toMatchObject({
       message: 'User account id is required',
     });
   });
 
   it('returns array on success', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({ data: { result: [] } });
-    await expect(
-      NexusClient.listWorkflows(mockedUserAccountId)
-    ).resolves.toEqual([]);
+    await expect(client.listWorkflows(mockedUserAccountId)).resolves.toEqual(
+      []
+    );
   });
 });
 
 describe('updateWorkflow method', () => {
-  it('requires user account id', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.updateWorkflow(mockedWorkflowKey, '', mockedWorkflow)
+      // @ts-ignore
+      client.updateWorkflow()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires user account id', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.updateWorkflow(mockedWorkflowKey, '', mockedWorkflow)
     ).rejects.toMatchObject({
       message: 'User account id is required',
     });
   });
 
   it('requires workflow key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.updateWorkflow('', mockedUserAccountId, mockedWorkflow)
+      client.updateWorkflow('', mockedUserAccountId, mockedWorkflow)
     ).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
   });
 
   it('requires workflow to have creator', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.updateWorkflow(mockedWorkflowKey, mockedUserAccountId, {
+      client.updateWorkflow(mockedWorkflowKey, mockedUserAccountId, {
         title: '',
         trigger: {
           type: 'trigger',
@@ -98,11 +174,13 @@ describe('updateWorkflow method', () => {
   });
 
   it('returns workflow key on success', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: { result: { key: mockedWorkflowKey } },
     });
     await expect(
-      NexusClient.updateWorkflow(
+      client.updateWorkflow(
         mockedWorkflowKey,
         mockedUserAccountId,
         mockedWorkflow
@@ -112,13 +190,27 @@ describe('updateWorkflow method', () => {
 });
 
 describe('getWorkflowExecutions method', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.getWorkflowExecutions()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
   it('requires workflow key', async () => {
-    await expect(NexusClient.getWorkflowExecutions('')).rejects.toMatchObject({
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.getWorkflowExecutions('')).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
   });
 
   it('returns an array of workflow execution IDs on success ', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: [
@@ -129,7 +221,7 @@ describe('getWorkflowExecutions method', () => {
       },
     });
     await expect(
-      NexusClient.getWorkflowExecutions(mockedWorkflowKey)
+      client.getWorkflowExecutions(mockedWorkflowKey)
     ).resolves.toEqual([
       {
         executionId: mockedWorkflowExecutionId,
@@ -139,15 +231,27 @@ describe('getWorkflowExecutions method', () => {
 });
 
 describe('getWorkflowExecutionLog method', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.getWorkflowExecutionLog()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
   it('requires workflow execution ID', async () => {
-    await expect(NexusClient.getWorkflowExecutionLog('')).rejects.toMatchObject(
-      {
-        message: 'Workflow execution ID is required',
-      }
-    );
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.getWorkflowExecutionLog('')).rejects.toMatchObject({
+      message: 'Workflow execution ID is required',
+    });
   });
 
   it('returns an array of executed workflow steps ', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: [
@@ -158,7 +262,7 @@ describe('getWorkflowExecutionLog method', () => {
       },
     });
     await expect(
-      NexusClient.getWorkflowExecutionLog(mockedWorkflowExecutionId)
+      client.getWorkflowExecutionLog(mockedWorkflowExecutionId)
     ).resolves.toEqual([
       {
         executionId: mockedWorkflowExecutionId,
@@ -168,65 +272,98 @@ describe('getWorkflowExecutionLog method', () => {
 });
 
 describe('isAllowedUser method', () => {
-  it('requires user account ID', async () => {
-    await expect(NexusClient.isAllowedUser('')).rejects.toMatchObject({
-      message: 'User account ID is required',
-    });
-  });
-
-  it('returns true if user account ID is allowed', async () => {
+  it('does not requires authentication', async () => {
+    const client = new NexusClient();
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
       },
     });
-    await expect(
-      NexusClient.isAllowedUser(mockedUserAccountId)
-    ).resolves.toEqual(true);
+    await expect(client.isAllowedUser(mockedUserAccountId)).resolves.toEqual(
+      true
+    );
+  });
+
+  it('requires user account ID', async () => {
+    const client = new NexusClient();
+    await expect(client.isAllowedUser('')).rejects.toMatchObject({
+      message: 'User account ID is required',
+    });
+  });
+
+  it('returns true if user account ID is allowed', async () => {
+    const client = new NexusClient();
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(client.isAllowedUser(mockedUserAccountId)).resolves.toEqual(
+      true
+    );
   });
 });
 
 describe('testAction method', () => {
-  it('requires user account ID', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.testAction('', mockedWorkflow.trigger, {})
+      // @ts-ignore
+      client.testAction()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires user account ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.testAction('', mockedWorkflow.trigger, {})
     ).rejects.toMatchObject({
       message: 'User account ID is required',
     });
   });
 
   it('requires workflow step object', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
       // @ts-ignore
-      NexusClient.testAction(mockedUserAccountId, '', {})
+      client.testAction(mockedUserAccountId, '', {})
     ).rejects.toMatchObject({
       message: 'Workflow step object is required',
     });
   });
 
   it('requires input object', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
       // @ts-ignore
-      NexusClient.testAction(mockedUserAccountId, mockedWorkflow.trigger, '')
+      client.testAction(mockedUserAccountId, mockedWorkflow.trigger, '')
     ).rejects.toMatchObject({
       message: 'Sample input object is required',
     });
   });
 
   it('returns action execution payload on success', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {},
       },
     });
     await expect(
-      NexusClient.testAction(mockedUserAccountId, mockedWorkflow.trigger, {})
+      client.testAction(mockedUserAccountId, mockedWorkflow.trigger, {})
     ).resolves.toEqual({});
   });
 });
 
 describe('getConnectors method', () => {
   it('returns empty array if no connectors found', async () => {
+    const client = new NexusClient();
     mockedAxios.get.mockImplementation(url => {
       switch (url) {
         case mockedWeb2CconnectorsPath:
@@ -241,10 +378,11 @@ describe('getConnectors method', () => {
           return Promise.resolve({ data: mockedConnector });
       }
     });
-    await expect(NexusClient.getConnectors()).resolves.toEqual([]);
+    await expect(client.getConnectors()).resolves.toEqual([]);
   });
 
   it('returns array of connectors on success', async () => {
+    const client = new NexusClient();
     mockedAxios.get.mockImplementation(url => {
       switch (url) {
         case mockedWeb2CconnectorsPath:
@@ -259,7 +397,7 @@ describe('getConnectors method', () => {
           return Promise.resolve({ data: mockedConnector });
       }
     });
-    await expect(NexusClient.getConnectors()).resolves.toEqual([
+    await expect(client.getConnectors()).resolves.toEqual([
       mockedConnector,
       mockedConnector,
     ]);
@@ -267,102 +405,140 @@ describe('getConnectors method', () => {
 });
 
 describe('deleteWorkflow', () => {
-  it('requires user account ID', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.deleteWorkflow('', mockedWorkflowKey)
+      // @ts-ignore
+      client.deleteWorkflow()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires user account ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.deleteWorkflow('', mockedWorkflowKey)
     ).rejects.toMatchObject({
       message: 'User account ID is required',
     });
   });
 
   it('requires workflow key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.deleteWorkflow(mockedUserAccountId, '')
+      client.deleteWorkflow(mockedUserAccountId, '')
     ).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
   });
 
   it('returns true on success deletion', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: { deleted: true },
       },
     });
     await expect(
-      NexusClient.deleteWorkflow(mockedUserAccountId, mockedWorkflowKey)
+      client.deleteWorkflow(mockedUserAccountId, mockedWorkflowKey)
     ).resolves.toEqual({ deleted: true });
   });
 
   it('returns false on failed deletion', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: { deleted: false },
       },
     });
     await expect(
-      NexusClient.deleteWorkflow(mockedUserAccountId, mockedWorkflowKey)
+      client.deleteWorkflow(mockedUserAccountId, mockedWorkflowKey)
     ).resolves.toEqual({ deleted: false });
   });
 });
 
 describe('requestEarlyAccess', () => {
   it('requires user account ID', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.requestEarlyAccess('', mockedEmail)
+      client.requestEarlyAccess('', mockedEmail)
     ).rejects.toMatchObject({
       message: 'User account ID is required',
     });
   });
 
   it('requires email', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.requestEarlyAccess(mockedUserAccountId, '')
+      client.requestEarlyAccess(mockedUserAccountId, '')
     ).rejects.toMatchObject({
       message: 'Email is required',
     });
   });
 
   it('requires email to be valid', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.requestEarlyAccess(mockedUserAccountId, 'invalid@email')
+      client.requestEarlyAccess(mockedUserAccountId, 'invalid@email')
     ).rejects.toMatchObject({
       message: 'Invalid email',
     });
   });
 
   it('returns true on success request', async () => {
+    const client = new NexusClient();
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
       },
     });
     await expect(
-      NexusClient.requestEarlyAccess(mockedUserAccountId, mockedEmail)
+      client.requestEarlyAccess(mockedUserAccountId, mockedEmail)
     ).resolves.toEqual(true);
   });
 });
 
 describe('saveWalletAddress', () => {
-  it('requires user account ID', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.saveWalletAddress('', mockedWalletAddress)
+      // @ts-ignore
+      client.saveWalletAddress()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires user account ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.saveWalletAddress('', mockedWalletAddress)
     ).rejects.toMatchObject({
       message: 'User account ID is required',
     });
   });
 
   it('requires wallet address', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.saveWalletAddress(mockedUserAccountId, '')
+      client.saveWalletAddress(mockedUserAccountId, '')
     ).rejects.toMatchObject({
       message: 'Wallet address is required',
     });
   });
 
   it('requires email to be valid', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.saveWalletAddress(
+      client.saveWalletAddress(
         mockedUserAccountId,
         mockedWalletAddress,
         'invalid@email'
@@ -373,24 +549,28 @@ describe('saveWalletAddress', () => {
   });
 
   it('returns true on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
       },
     });
     await expect(
-      NexusClient.saveWalletAddress(mockedUserAccountId, mockedWalletAddress)
+      client.saveWalletAddress(mockedUserAccountId, mockedWalletAddress)
     ).resolves.toEqual(true);
   });
 
   it('returns true on success request with valid email', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
       },
     });
     await expect(
-      NexusClient.saveWalletAddress(
+      client.saveWalletAddress(
         mockedUserAccountId,
         mockedWalletAddress,
         mockedEmail
@@ -400,33 +580,49 @@ describe('saveWalletAddress', () => {
 });
 
 describe('callInputProvider', () => {
-  it('requires connector key', async () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.callInputProvider('', '', {})
+      // @ts-ignore
+      client.callInputProvider()
     ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires connector key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.callInputProvider('', '', {})).rejects.toMatchObject({
       message: 'Connector key is required',
     });
   });
 
   it('requires operation key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', '', {})
+      client.callInputProvider('connectorKey', '', {})
     ).rejects.toMatchObject({
       message: 'Operation key is required',
     });
   });
 
   it('requires JSON RPC request object', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', 'operationKey', false)
+      client.callInputProvider('connectorKey', 'operationKey', false)
     ).rejects.toMatchObject({
       message: 'JSON RPC request object is required',
     });
   });
 
   it('requires JSON RPC request object to have method', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+      client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
         method: '',
       })
@@ -437,8 +633,10 @@ describe('callInputProvider', () => {
   });
 
   it('requires JSON RPC request object to have version 2.0', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+      client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
         jsonrpc: '1.0',
       })
@@ -448,8 +646,10 @@ describe('callInputProvider', () => {
   });
 
   it('requires JSON RPC request object to have params.key property', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+      client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
         params: {
           key: '',
@@ -462,8 +662,10 @@ describe('callInputProvider', () => {
   });
 
   it('requires JSON RPC request params key property to match operation key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
-      NexusClient.callInputProvider('connectorKey', 'operationKey', {
+      client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
         params: {
           key: 'notOperationKey',
@@ -476,6 +678,8 @@ describe('callInputProvider', () => {
   });
 
   it('returns input fields schema on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.request.mockResolvedValue({
       data: {
         result: {
@@ -484,7 +688,7 @@ describe('callInputProvider', () => {
       },
     });
     await expect(
-      NexusClient.callInputProvider(
+      client.callInputProvider(
         'connectorKey',
         'operationKey',
         mockedJsonRpcPayload
@@ -495,28 +699,32 @@ describe('callInputProvider', () => {
 
 describe('callWebhook', () => {
   it('requires connector key', async () => {
-    await expect(NexusClient.callWebhook('', '', {})).rejects.toMatchObject({
+    const client = new NexusClient();
+    await expect(client.callWebhook('', '', {})).rejects.toMatchObject({
       message: 'Connector key is required',
     });
   });
 
   it('requires operation key', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.callWebhook('connectorKey', '', {})
+      client.callWebhook('connectorKey', '', {})
     ).rejects.toMatchObject({
       message: 'Operation key is required',
     });
   });
 
   it('requires body object', async () => {
+    const client = new NexusClient();
     await expect(
-      NexusClient.callWebhook('connectorKey', 'operationKey', false)
+      client.callWebhook('connectorKey', 'operationKey', false)
     ).rejects.toMatchObject({
       message: 'Body object is required',
     });
   });
 
   it('returns JSON RPC object on success request', async () => {
+    const client = new NexusClient();
     mockedAxios.request.mockResolvedValue({
       data: {
         result: {
@@ -527,7 +735,7 @@ describe('callWebhook', () => {
       },
     });
     await expect(
-      NexusClient.callWebhook('connectorKey', 'operationKey', {})
+      client.callWebhook('connectorKey', 'operationKey', {})
     ).resolves.toEqual({ jsonrpc: '2.0', result: {}, id: '1' });
   });
 });

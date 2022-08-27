@@ -4,14 +4,28 @@ const WORKFLOW_ENGINE_URL = 'https://orchestrator.grindery.org';
 
 type ServerError = { error: any };
 
-export const sendEngineRequest = async (method: string, params: unknown) => {
+export const sendEngineRequest = async (
+  method: string,
+  params: unknown,
+  token?: string | null
+) => {
+  const headers: any = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   try {
-    const res = await axios.post(WORKFLOW_ENGINE_URL, {
-      jsonrpc: '2.0',
-      method: method,
-      id: new Date(),
-      params: params,
-    });
+    const res = await axios.post(
+      WORKFLOW_ENGINE_URL,
+      {
+        jsonrpc: '2.0',
+        method: method,
+        id: new Date(),
+        params: params,
+      },
+      {
+        headers,
+      }
+    );
     if (res && res.data && res.data.result) {
       return res.data.result;
     } else {
@@ -36,13 +50,19 @@ export const sendEngineRequest = async (method: string, params: unknown) => {
 export const sendEngineHTTPRequest = async (
   method: string,
   path: string,
-  data: unknown
+  data: unknown,
+  token?: string | null
 ) => {
+  const headers: any = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   try {
     const res = await axios.request({
       method,
       url: WORKFLOW_ENGINE_URL + path,
       data,
+      headers,
     });
     if (res && res.data && res.data.result) {
       return res.data.result;

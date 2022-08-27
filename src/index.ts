@@ -19,14 +19,52 @@ const WEB3_CONNECTORS_PATH =
  * @description A class to interact with Grindery Nexus engine API
  */
 class NexusClient {
+  /**
+   * Is user authenticated to call sensitive methods
+   */
+  isAuthenticated: boolean = false;
+
+  /**
+   * User authentication token
+   */
+  private token: string | null = null;
+
   constructor() {}
 
   /**
-   * Creates new workflow
+   * Set authentication token
+   *
+   * @param {string} token - Authentication token
+   * @returns {void}
+   */
+  authenticate(token: string): void {
+    if (token) {
+      this.token = token;
+    } else {
+      throw new Error('Token required');
+    }
+  }
+
+  /**
+   * Get current authentication token. Authentication required.
+   * @returns {string} Authentication token
+   */
+  getToken(): string {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return this.token;
+  }
+
+  /**
+   * Creates new workflow. Authentication required.
    * @param {Workflow} workflow - New workflow object
-   * @returns {Promise} - Promise object with new workflow key
+   * @returns {Promise} Promise object with new workflow key
    */
   async createWorkflow(workflow: Workflow): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!workflow) {
       throw new Error('Workflow object is required');
     }
@@ -34,40 +72,54 @@ class NexusClient {
       throw new Error('Workflow creator is required');
     }
 
-    return await sendEngineRequest('or_createWorkflow', {
-      userAccountId: workflow.creator,
-      workflow: workflow,
-    });
+    return await sendEngineRequest(
+      'or_createWorkflow',
+      {
+        userAccountId: workflow.creator,
+        workflow: workflow,
+      },
+      this.token
+    );
   }
 
   /**
-   * Lists user's workflows
+   * Lists user's workflows. Authentication required.
    *
    * @param {string} userAccountId - User account ID
-   * @returns {Promise} - Promise object with an array of user's workflows
+   * @returns {Promise} Promise object with an array of user's workflows
    */
   async listWorkflows(userAccountId: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account id is required');
     }
-    return await sendEngineRequest('or_listWorkflows', {
-      userAccountId,
-    });
+    return await sendEngineRequest(
+      'or_listWorkflows',
+      {
+        userAccountId,
+      },
+      this.token
+    );
   }
 
   /**
-   * Updates a single workflow
+   * Updates a single workflow. Authentication required.
    *
    * @param {string} key - Workflow key
    * @param {string} userAccountId - User account ID
    * @param {Workflow} workflow - Updated workflow object
-   * @returns {Promise} - Promise object with workflow key
+   * @returns {Promise} Promise object with workflow key
    */
   async updateWorkflow(
     key: string,
     userAccountId: string,
     workflow: Workflow
   ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!key) {
       throw new Error('Workflow key is required');
     }
@@ -77,48 +129,66 @@ class NexusClient {
     if (!workflow || !workflow.creator) {
       throw new Error('Workflow creator is required');
     }
-    return await sendEngineRequest('or_updateWorkflow', {
-      key,
-      userAccountId,
-      workflow,
-    });
+    return await sendEngineRequest(
+      'or_updateWorkflow',
+      {
+        key,
+        userAccountId,
+        workflow,
+      },
+      this.token
+    );
   }
 
   /**
-   * Gets workflow executions
+   * Gets workflow executions. Authentication required.
    *
    * @param {string} workflowKey - Workflow key
-   * @returns {Promise} - Promise object with an array of workflow executions
+   * @returns {Promise} Promise object with an array of workflow executions
    */
   async getWorkflowExecutions(workflowKey: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!workflowKey) {
       throw new Error('Workflow key is required');
     }
-    return await sendEngineRequest('or_getWorkflowExecutions', {
-      workflowKey,
-    });
+    return await sendEngineRequest(
+      'or_getWorkflowExecutions',
+      {
+        workflowKey,
+      },
+      this.token
+    );
   }
 
   /**
-   * Gets workflow execution log
+   * Gets workflow execution log. Authentication required.
    *
    * @param {string} executionId - Workflow execution ID
-   * @returns {Promise} - Promise object with workflow execution log
+   * @returns {Promise} Promise object with workflow execution log
    */
   async getWorkflowExecutionLog(executionId: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!executionId) {
       throw new Error('Workflow execution ID is required');
     }
-    return await sendEngineRequest('or_getWorkflowExecutionLog', {
-      executionId,
-    });
+    return await sendEngineRequest(
+      'or_getWorkflowExecutionLog',
+      {
+        executionId,
+      },
+      this.token
+    );
   }
 
   /**
    * Checks if user is approved for early access
    *
    * @param {string} userAccountId - User account ID
-   * @returns {Promise} - Promise object with `true` if user is allowed and `false` if not
+   * @returns {Promise} Promise object with `true` if user is allowed and `false` if not
    */
   async isAllowedUser(userAccountId: string): Promise<any> {
     if (!userAccountId) {
@@ -130,18 +200,21 @@ class NexusClient {
   }
 
   /**
-   * Tests driver action
+   * Tests driver action. Authentication required.
    *
    * @param {string} userAccountId - User account ID
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
-   * @returns {Promise} - Promise object with action execution payload
+   * @returns {Promise} Promise object with action execution payload
    */
   async testAction(
     userAccountId: string,
     step: Operation,
     input: unknown
   ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -151,17 +224,21 @@ class NexusClient {
     if (!input) {
       throw new Error('Sample input object is required');
     }
-    return await sendEngineRequest('or_testAction', {
-      userAccountId,
-      step,
-      input,
-    });
+    return await sendEngineRequest(
+      'or_testAction',
+      {
+        userAccountId,
+        step,
+        input,
+      },
+      this.token
+    );
   }
 
   /**
    * Gets list of available connectors/drivers
    *
-   * @returns {Promise} - Promise object with an array of connectors/drivers
+   * @returns {Promise} Promise object with an array of connectors/drivers
    */
   async getConnectors(): Promise<any> {
     const responses = [];
@@ -204,26 +281,33 @@ class NexusClient {
   }
 
   /**
-   * Deletes user's workflow by key
+   * Deletes user's workflow by key. Authentication required.
    *
    * @param {string} userAccountId - User account ID
    * @param {string} key - Workflow key
-   * @returns {Promise} - Promise object with `deleted` property `true` or `false`
+   * @returns {Promise} Promise object with `deleted` property `true` or `false`
    */
   async deleteWorkflow(
     userAccountId: string,
     key: string
   ): Promise<{ deleted: boolean }> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
     if (!key) {
       throw new Error('Workflow key is required');
     }
-    return await sendEngineRequest('or_deleteWorkflow', {
-      userAccountId,
-      key,
-    });
+    return await sendEngineRequest(
+      'or_deleteWorkflow',
+      {
+        userAccountId,
+        key,
+      },
+      this.token
+    );
   }
 
   /**
@@ -231,7 +315,7 @@ class NexusClient {
    *
    * @param {string} userAccountId - User account ID
    * @param {string} email - User email
-   * @returns {Promise} - Promise object with `true` on success
+   * @returns {Promise} Promise object with `true` on success
    */
   async requestEarlyAccess(userAccountId: string, email: string): Promise<any> {
     if (!userAccountId) {
@@ -250,18 +334,21 @@ class NexusClient {
   }
 
   /**
-   * Saves user wallet address in CRM
+   * Saves user wallet address in CRM. Authentication required.
    *
    * @param {string} userAccountId - User account ID
    * @param {string} walletAddress - User wallet address
    * @param {string} [email] - User email, optional
-   * @returns {Promise} - Promise object with `true` on success
+   * @returns {Promise} Promise object with `true` on success
    */
   async saveWalletAddress(
     userAccountId: string,
     walletAddress: string,
     email?: string
   ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -271,26 +358,33 @@ class NexusClient {
     if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
       throw new Error('Invalid email');
     }
-    return await sendEngineRequest('or_saveWalletAddress', {
-      userAccountId,
-      email,
-      walletAddress,
-    });
+    return await sendEngineRequest(
+      'or_saveWalletAddress',
+      {
+        userAccountId,
+        email,
+        walletAddress,
+      },
+      this.token
+    );
   }
 
   /**
-   * Sends request to an operation's `inputFieldProviderUrl`
+   * Sends request to an operation's `inputFieldProviderUrl`. Authentication required.
    *
    * @param {string} connectorKey - Connector key
    * @param {string} operationKey - Trigger or Action operation key
    * @param {object} body - JSON RPC request object with user input
-   * @returns {Promise} - Promise object with operation's field provider response
+   * @returns {Promise} Promise object with operation's field provider response
    */
   async callInputProvider(
     connectorKey: string,
     operationKey: string,
     body: any
   ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!connectorKey) {
       throw new Error('Connector key is required');
     }
@@ -321,7 +415,8 @@ class NexusClient {
     return await sendEngineHTTPRequest(
       'POST',
       `/input-provider/${connectorKey}/${operationKey}`,
-      body
+      body,
+      this.token
     );
   }
 
@@ -331,7 +426,7 @@ class NexusClient {
    * @param {string} connectorKey - Connector key
    * @param {string} operationKey - Trigger operation key
    * @param {object} body - JSON body
-   * @returns {Promise} - Promise object with JSON RPC 2.0 response
+   * @returns {Promise} Promise object with JSON RPC 2.0 response
    */
   async callWebhook(
     connectorKey: string,
@@ -357,4 +452,4 @@ class NexusClient {
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
 
-export default new NexusClient();
+export default NexusClient;

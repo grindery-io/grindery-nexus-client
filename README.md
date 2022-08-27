@@ -18,11 +18,23 @@ or
 import NexusClient from 'grindery-nexus-client';
 ```
 
+### Init client
+
+```js
+const client = new NexusClient();
+```
+
+### Set authentication token
+
+```js
+client.authenticate('{userToken}');
+```
+
 ### Call client methods
 
 ```js
-const test = async () => {
-  const workflows = await NexusClient.listWorkflows('user:account:id`)
+const listWorkflows = async () => {
+  const workflows = await client.listWorkflows('user:account:id`)
 }
 ```
 
