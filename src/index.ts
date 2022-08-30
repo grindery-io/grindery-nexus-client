@@ -20,11 +20,6 @@ const WEB3_CONNECTORS_PATH =
  */
 class NexusClient {
   /**
-   * Is user authenticated to call sensitive methods
-   */
-  isAuthenticated: boolean = false;
-
-  /**
    * User authentication token
    */
   private token: string | null = null;
@@ -185,12 +180,15 @@ class NexusClient {
   }
 
   /**
-   * Checks if user is approved for early access
+   * Checks if user is approved for early access. Authentication required.
    *
    * @param {string} userAccountId - User account ID
    * @returns {Promise} Promise object with `true` if user is allowed and `false` if not
    */
   async isAllowedUser(userAccountId: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -205,12 +203,14 @@ class NexusClient {
    * @param {string} userAccountId - User account ID
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
+   * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
    * @returns {Promise} Promise object with action execution payload
    */
   async testAction(
     userAccountId: string,
     step: Operation,
-    input: unknown
+    input: unknown,
+    environment?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -230,6 +230,7 @@ class NexusClient {
         userAccountId,
         step,
         input,
+        environment: environment || 'production',
       },
       this.token
     );
@@ -311,13 +312,16 @@ class NexusClient {
   }
 
   /**
-   * Requests early access to Nexus app
+   * Requests early access to Nexus app. Authentication required.
    *
    * @param {string} userAccountId - User account ID
    * @param {string} email - User email
    * @returns {Promise} Promise object with `true` on success
    */
   async requestEarlyAccess(userAccountId: string, email: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
@@ -375,12 +379,14 @@ class NexusClient {
    * @param {string} connectorKey - Connector key
    * @param {string} operationKey - Trigger or Action operation key
    * @param {object} body - JSON RPC request object with user input
+   * @param {string} environment - Specifiy execution environment. Use `staging` for staging environment. Optional.
    * @returns {Promise} Promise object with operation's field provider response
    */
   async callInputProvider(
     connectorKey: string,
     operationKey: string,
-    body: any
+    body: any,
+    environment?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -414,7 +420,9 @@ class NexusClient {
     }
     return await sendEngineHTTPRequest(
       'POST',
-      `/input-provider/${connectorKey}/${operationKey}`,
+      `/input-provider/${connectorKey}/${operationKey}${
+        environment ? '?_grinderyEnvironment=' + environment : ''
+      }`,
       body,
       this.token
     );
@@ -426,12 +434,14 @@ class NexusClient {
    * @param {string} connectorKey - Connector key
    * @param {string} operationKey - Trigger operation key
    * @param {object} body - JSON body
+   * @param {string} environment - Specifiy execution environment. Use `staging` for staging environment. Optional.
    * @returns {Promise} Promise object with JSON RPC 2.0 response
    */
   async callWebhook(
     connectorKey: string,
     operationKey: string,
-    body: any
+    body: any,
+    environment?: string
   ): Promise<any> {
     if (!connectorKey) {
       throw new Error('Connector key is required');
@@ -444,7 +454,9 @@ class NexusClient {
     }
     return await sendEngineHTTPRequest(
       'POST',
-      `/webhook/${connectorKey}/${operationKey}`,
+      `/webhook/${connectorKey}/${operationKey}${
+        environment ? '?_grinderyEnvironment=' + environment : ''
+      }`,
       body
     );
   }

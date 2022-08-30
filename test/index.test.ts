@@ -272,20 +272,19 @@ describe('getWorkflowExecutionLog method', () => {
 });
 
 describe('isAllowedUser method', () => {
-  it('does not requires authentication', async () => {
+  it('requires authentication', async () => {
     const client = new NexusClient();
-    mockedAxios.post.mockResolvedValue({
-      data: {
-        result: true,
-      },
+    await expect(
+      // @ts-ignore
+      client.isAllowedUser()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
     });
-    await expect(client.isAllowedUser(mockedUserAccountId)).resolves.toEqual(
-      true
-    );
   });
 
   it('requires user account ID', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(client.isAllowedUser('')).rejects.toMatchObject({
       message: 'User account ID is required',
     });
@@ -293,6 +292,7 @@ describe('isAllowedUser method', () => {
 
   it('returns true if user account ID is allowed', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -463,8 +463,19 @@ describe('deleteWorkflow', () => {
 });
 
 describe('requestEarlyAccess', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.requestEarlyAccess()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
   it('requires user account ID', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
       client.requestEarlyAccess('', mockedEmail)
     ).rejects.toMatchObject({
@@ -474,6 +485,7 @@ describe('requestEarlyAccess', () => {
 
   it('requires email', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
       client.requestEarlyAccess(mockedUserAccountId, '')
     ).rejects.toMatchObject({
@@ -483,6 +495,7 @@ describe('requestEarlyAccess', () => {
 
   it('requires email to be valid', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     await expect(
       client.requestEarlyAccess(mockedUserAccountId, 'invalid@email')
     ).rejects.toMatchObject({
@@ -492,6 +505,7 @@ describe('requestEarlyAccess', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
+    client.authenticate('userToken');
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,

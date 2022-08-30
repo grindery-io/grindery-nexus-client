@@ -15,13 +15,13 @@
     * [.getWorkflowExecutions(workflowKey)](#NexusClient+getWorkflowExecutions) ⇒ <code>Promise</code>
     * [.getWorkflowExecutionLog(executionId)](#NexusClient+getWorkflowExecutionLog) ⇒ <code>Promise</code>
     * [.isAllowedUser(userAccountId)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
-    * [.testAction(userAccountId, step, input)](#NexusClient+testAction) ⇒ <code>Promise</code>
+    * [.testAction(userAccountId, step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * [.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>
     * [.deleteWorkflow(userAccountId, key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
     * [.requestEarlyAccess(userAccountId, email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
     * [.saveWalletAddress(userAccountId, walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
-    * [.callInputProvider(connectorKey, operationKey, body)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
-    * [.callWebhook(connectorKey, operationKey, body)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
+    * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
+    * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -111,7 +111,7 @@
 <a name="NexusClient+isAllowedUser"></a>
 
 ### nexusClient.isAllowedUser(userAccountId) ⇒ <code>Promise</code>
-<p>Checks if user is approved for early access</p>
+<p>Checks if user is approved for early access. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user is allowed and <code>false</code> if not</p>  
@@ -122,7 +122,7 @@
 
 <a name="NexusClient+testAction"></a>
 
-### nexusClient.testAction(userAccountId, step, input) ⇒ <code>Promise</code>
+### nexusClient.testAction(userAccountId, step, input, environment) ⇒ <code>Promise</code>
 <p>Tests driver action. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -133,6 +133,7 @@
 | userAccountId | <code>string</code> | <p>User account ID</p> |
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
+| environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
 
 <a name="NexusClient+getConnectors"></a>
 
@@ -157,7 +158,7 @@
 <a name="NexusClient+requestEarlyAccess"></a>
 
 ### nexusClient.requestEarlyAccess(userAccountId, email) ⇒ <code>Promise</code>
-<p>Requests early access to Nexus app</p>
+<p>Requests early access to Nexus app. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> on success</p>  
@@ -183,7 +184,7 @@
 
 <a name="NexusClient+callInputProvider"></a>
 
-### nexusClient.callInputProvider(connectorKey, operationKey, body) ⇒ <code>Promise</code>
+### nexusClient.callInputProvider(connectorKey, operationKey, body, environment) ⇒ <code>Promise</code>
 <p>Sends request to an operation's <code>inputFieldProviderUrl</code>. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -194,10 +195,11 @@
 | connectorKey | <code>string</code> | <p>Connector key</p> |
 | operationKey | <code>string</code> | <p>Trigger or Action operation key</p> |
 | body | <code>object</code> | <p>JSON RPC request object with user input</p> |
+| environment | <code>string</code> | <p>Specifiy execution environment. Use <code>staging</code> for staging environment. Optional.</p> |
 
 <a name="NexusClient+callWebhook"></a>
 
-### nexusClient.callWebhook(connectorKey, operationKey, body) ⇒ <code>Promise</code>
+### nexusClient.callWebhook(connectorKey, operationKey, body, environment) ⇒ <code>Promise</code>
 <p>Sends webhook to a trigger</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -208,4 +210,5 @@
 | connectorKey | <code>string</code> | <p>Connector key</p> |
 | operationKey | <code>string</code> | <p>Trigger operation key</p> |
 | body | <code>object</code> | <p>JSON body</p> |
+| environment | <code>string</code> | <p>Specifiy execution environment. Use <code>staging</code> for staging environment. Optional.</p> |
 
