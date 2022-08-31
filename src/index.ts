@@ -192,9 +192,13 @@ class NexusClient {
     if (!userAccountId) {
       throw new Error('User account ID is required');
     }
-    return await sendEngineRequest('or_isAllowedUser', {
-      userAccountId,
-    });
+    return await sendEngineRequest(
+      'or_isAllowedUser',
+      {
+        userAccountId,
+      },
+      this.token
+    );
   }
 
   /**
@@ -331,10 +335,14 @@ class NexusClient {
     if (!/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
       throw new Error('Invalid email');
     }
-    return await sendEngineRequest('or_requestEarlyAccess', {
-      userAccountId,
-      email,
-    });
+    return await sendEngineRequest(
+      'or_requestEarlyAccess',
+      {
+        userAccountId,
+        email,
+      },
+      this.token
+    );
   }
 
   /**
