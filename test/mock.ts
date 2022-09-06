@@ -1,8 +1,5 @@
 import { Workflow } from '../src/types';
 
-export const mockedUserAccountId =
-  'eip155:1:0xab16a96d359ec26a11e2c2b3d8f8b8942d5bfcdb';
-
 export const mockedWorkflowKey = 'workflow-key';
 
 export const mockedWorkflowExecutionId = '123-456-789';

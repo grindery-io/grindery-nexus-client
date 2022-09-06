@@ -34,8 +34,8 @@ client.authenticate('{userToken}');
 
 ```js
 const listWorkflows = async () => {
-  const workflows = await client.listWorkflows('user:account:id`)
-}
+  const workflows = await client.listWorkflows();
+};
 ```
 
 See full documentation in the [DOCUMENTATION.md](https://github.com/grindery-io/grindery-nexus-client/blob/master/DOCUMENTATION.md) file.

@@ -9,19 +9,21 @@
     * [new NexusClient()](#new_NexusClient_new)
     * [.authenticate(token)](#NexusClient+authenticate) ⇒ <code>void</code>
     * [.getToken()](#NexusClient+getToken) ⇒ <code>string</code>
-    * [.createWorkflow(workflow)](#NexusClient+createWorkflow) ⇒ <code>Promise</code>
-    * [.listWorkflows(userAccountId)](#NexusClient+listWorkflows) ⇒ <code>Promise</code>
-    * [.updateWorkflow(key, userAccountId, workflow)](#NexusClient+updateWorkflow) ⇒ <code>Promise</code>
-    * [.getWorkflowExecutions(workflowKey)](#NexusClient+getWorkflowExecutions) ⇒ <code>Promise</code>
+    * [.createWorkflow(workflow, workspaceKey)](#NexusClient+createWorkflow) ⇒ <code>Promise</code>
+    * [.listWorkflows(workspaceKey)](#NexusClient+listWorkflows) ⇒ <code>Promise</code>
+    * [.updateWorkflow(key, workflow)](#NexusClient+updateWorkflow) ⇒ <code>Promise</code>
+    * [.getWorkflowExecutions(workflowKey, since, until, limit)](#NexusClient+getWorkflowExecutions) ⇒ <code>Promise</code>
     * [.getWorkflowExecutionLog(executionId)](#NexusClient+getWorkflowExecutionLog) ⇒ <code>Promise</code>
-    * [.isAllowedUser(userAccountId)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
-    * [.testAction(userAccountId, step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
-    * [.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>
-    * [.deleteWorkflow(userAccountId, key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
-    * [.requestEarlyAccess(userAccountId, email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
-    * [.saveWalletAddress(userAccountId, walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
+    * [.isAllowedUser()](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
+    * [.testAction(step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
+    * ~~[.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>~~
+    * [.deleteWorkflow(key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
+    * [.requestEarlyAccess(email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
+    * [.saveWalletAddress(walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
+    * [.listDrivers(environment)](#NexusClient+listDrivers) ⇒ <code>Promise</code>
+    * [.getDriver(driverKey, environment)](#NexusClient+getDriver) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -48,7 +50,7 @@
 **Returns**: <code>string</code> - <p>Authentication token</p>  
 <a name="NexusClient+createWorkflow"></a>
 
-### nexusClient.createWorkflow(workflow) ⇒ <code>Promise</code>
+### nexusClient.createWorkflow(workflow, workspaceKey) ⇒ <code>Promise</code>
 <p>Creates new workflow. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -57,10 +59,11 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | workflow | <code>Workflow</code> | <p>New workflow object</p> |
+| workspaceKey | <code>string</code> | <p>Workspace key. Optional</p> |
 
 <a name="NexusClient+listWorkflows"></a>
 
-### nexusClient.listWorkflows(userAccountId) ⇒ <code>Promise</code>
+### nexusClient.listWorkflows(workspaceKey) ⇒ <code>Promise</code>
 <p>Lists user's workflows. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -68,11 +71,11 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
+| workspaceKey | <code>string</code> | <p>Workspace key. Optional.</p> |
 
 <a name="NexusClient+updateWorkflow"></a>
 
-### nexusClient.updateWorkflow(key, userAccountId, workflow) ⇒ <code>Promise</code>
+### nexusClient.updateWorkflow(key, workflow) ⇒ <code>Promise</code>
 <p>Updates a single workflow. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -81,12 +84,11 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | key | <code>string</code> | <p>Workflow key</p> |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
 | workflow | <code>Workflow</code> | <p>Updated workflow object</p> |
 
 <a name="NexusClient+getWorkflowExecutions"></a>
 
-### nexusClient.getWorkflowExecutions(workflowKey) ⇒ <code>Promise</code>
+### nexusClient.getWorkflowExecutions(workflowKey, since, until, limit) ⇒ <code>Promise</code>
 <p>Gets workflow executions. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -95,6 +97,9 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | workflowKey | <code>string</code> | <p>Workflow key</p> |
+| since | <code>number</code> | <p>Since parameter used for pagination. Optional.</p> |
+| until | <code>number</code> | <p>Until parameter used for pagination. Optional.</p> |
+| limit | <code>number</code> | <p>Limit parameter used for pagination. Optional.</p> |
 
 <a name="NexusClient+getWorkflowExecutionLog"></a>
 
@@ -110,19 +115,14 @@
 
 <a name="NexusClient+isAllowedUser"></a>
 
-### nexusClient.isAllowedUser(userAccountId) ⇒ <code>Promise</code>
+### nexusClient.isAllowedUser() ⇒ <code>Promise</code>
 <p>Checks if user is approved for early access. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user is allowed and <code>false</code> if not</p>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
-
 <a name="NexusClient+testAction"></a>
 
-### nexusClient.testAction(userAccountId, step, input, environment) ⇒ <code>Promise</code>
+### nexusClient.testAction(step, input, environment) ⇒ <code>Promise</code>
 <p>Tests driver action. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -130,21 +130,22 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
 | environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
 
 <a name="NexusClient+getConnectors"></a>
 
-### nexusClient.getConnectors() ⇒ <code>Promise</code>
+### ~~nexusClient.getConnectors() ⇒ <code>Promise</code>~~
+***Deprecated***
+
 <p>Gets list of available connectors/drivers</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with an array of connectors/drivers</p>  
 <a name="NexusClient+deleteWorkflow"></a>
 
-### nexusClient.deleteWorkflow(userAccountId, key) ⇒ <code>Promise</code>
+### nexusClient.deleteWorkflow(key) ⇒ <code>Promise</code>
 <p>Deletes user's workflow by key. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -152,12 +153,11 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
 | key | <code>string</code> | <p>Workflow key</p> |
 
 <a name="NexusClient+requestEarlyAccess"></a>
 
-### nexusClient.requestEarlyAccess(userAccountId, email) ⇒ <code>Promise</code>
+### nexusClient.requestEarlyAccess(email) ⇒ <code>Promise</code>
 <p>Requests early access to Nexus app. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -165,12 +165,11 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
 | email | <code>string</code> | <p>User email</p> |
 
 <a name="NexusClient+saveWalletAddress"></a>
 
-### nexusClient.saveWalletAddress(userAccountId, walletAddress, [email]) ⇒ <code>Promise</code>
+### nexusClient.saveWalletAddress(walletAddress, [email]) ⇒ <code>Promise</code>
 <p>Saves user wallet address in CRM. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -178,7 +177,6 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| userAccountId | <code>string</code> | <p>User account ID</p> |
 | walletAddress | <code>string</code> | <p>User wallet address</p> |
 | [email] | <code>string</code> | <p>User email, optional</p> |
 
@@ -211,4 +209,31 @@
 | operationKey | <code>string</code> | <p>Trigger operation key</p> |
 | body | <code>object</code> | <p>JSON body</p> |
 | environment | <code>string</code> | <p>Specifiy execution environment. Use <code>staging</code> for staging environment. Optional.</p> |
+
+<a name="NexusClient+listDrivers"></a>
+
+### nexusClient.listDrivers(environment) ⇒ <code>Promise</code>
+<p>Gets list of drivers</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with an array of drivers</p>  
+**Since**: 0.5.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| environment | <code>string</code> | <p>Set environment for getting drivers. Optional.</p> |
+
+<a name="NexusClient+getDriver"></a>
+
+### nexusClient.getDriver(driverKey, environment) ⇒ <code>Promise</code>
+<p>Gets single driver</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with a CDS object or <code>null</code> if driver not found</p>  
+**Since**: 0.5.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| driverKey | <code>string</code> | <p>Driver key</p> |
+| environment | <code>string</code> | <p>Set environment for getting driver. Optional.</p> |
 

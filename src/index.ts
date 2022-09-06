@@ -13,6 +13,9 @@ const WEB2_CONNECTORS_PATH =
 const WEB3_CONNECTORS_PATH =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
 
+const DRIVERS_URL = 'https://cds.grindery.org';
+const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.org';
+
 /**
  * Grindery Nexus Client
  *
@@ -54,9 +57,13 @@ class NexusClient {
   /**
    * Creates new workflow. Authentication required.
    * @param {Workflow} workflow - New workflow object
+   * @param {string} workspaceKey - Workspace key. Optional
    * @returns {Promise} Promise object with new workflow key
    */
-  async createWorkflow(workflow: Workflow): Promise<any> {
+  async createWorkflow(
+    workflow: Workflow,
+    workspaceKey?: string
+  ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -66,12 +73,11 @@ class NexusClient {
     if (!workflow.creator) {
       throw new Error('Workflow creator is required');
     }
-
     return await sendEngineRequest(
       'or_createWorkflow',
       {
-        userAccountId: workflow.creator,
         workflow: workflow,
+        ...(typeof workspaceKey !== 'undefined' && { workspaceKey }),
       },
       this.token
     );
@@ -80,20 +86,17 @@ class NexusClient {
   /**
    * Lists user's workflows. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
+   * @param {string} workspaceKey - Workspace key. Optional.
    * @returns {Promise} Promise object with an array of user's workflows
    */
-  async listWorkflows(userAccountId: string): Promise<any> {
+  async listWorkflows(workspaceKey?: string): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account id is required');
     }
     return await sendEngineRequest(
       'or_listWorkflows',
       {
-        userAccountId,
+        ...(typeof workspaceKey !== 'undefined' && { workspaceKey }),
       },
       this.token
     );
@@ -103,23 +106,15 @@ class NexusClient {
    * Updates a single workflow. Authentication required.
    *
    * @param {string} key - Workflow key
-   * @param {string} userAccountId - User account ID
    * @param {Workflow} workflow - Updated workflow object
    * @returns {Promise} Promise object with workflow key
    */
-  async updateWorkflow(
-    key: string,
-    userAccountId: string,
-    workflow: Workflow
-  ): Promise<any> {
+  async updateWorkflow(key: string, workflow: Workflow): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
     if (!key) {
       throw new Error('Workflow key is required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account id is required');
     }
     if (!workflow || !workflow.creator) {
       throw new Error('Workflow creator is required');
@@ -128,7 +123,6 @@ class NexusClient {
       'or_updateWorkflow',
       {
         key,
-        userAccountId,
         workflow,
       },
       this.token
@@ -139,9 +133,17 @@ class NexusClient {
    * Gets workflow executions. Authentication required.
    *
    * @param {string} workflowKey - Workflow key
+   * @param {number} since - Since parameter used for pagination. Optional.
+   * @param {number} until - Until parameter used for pagination. Optional.
+   * @param {number} limit - Limit parameter used for pagination. Optional.
    * @returns {Promise} Promise object with an array of workflow executions
    */
-  async getWorkflowExecutions(workflowKey: string): Promise<any> {
+  async getWorkflowExecutions(
+    workflowKey: string,
+    since?: number,
+    until?: number,
+    limit?: number
+  ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -152,6 +154,9 @@ class NexusClient {
       'or_getWorkflowExecutions',
       {
         workflowKey,
+        ...(typeof since !== 'undefined' && { since }),
+        ...(typeof until !== 'undefined' && { until }),
+        ...(typeof limit !== 'undefined' && { limit }),
       },
       this.token
     );
@@ -182,45 +187,30 @@ class NexusClient {
   /**
    * Checks if user is approved for early access. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
    * @returns {Promise} Promise object with `true` if user is allowed and `false` if not
    */
-  async isAllowedUser(userAccountId: string): Promise<any> {
+  async isAllowedUser(): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
-    if (!userAccountId) {
-      throw new Error('User account ID is required');
-    }
-    return await sendEngineRequest(
-      'or_isAllowedUser',
-      {
-        userAccountId,
-      },
-      this.token
-    );
+    return await sendEngineRequest('or_isAllowedUser', {}, this.token);
   }
 
   /**
    * Tests driver action. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
    * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
    * @returns {Promise} Promise object with action execution payload
    */
   async testAction(
-    userAccountId: string,
     step: Operation,
     input: unknown,
     environment?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account ID is required');
     }
     if (!step) {
       throw new Error('Workflow step object is required');
@@ -231,7 +221,6 @@ class NexusClient {
     return await sendEngineRequest(
       'or_testAction',
       {
-        userAccountId,
         step,
         input,
         environment: environment || 'production',
@@ -242,7 +231,7 @@ class NexusClient {
 
   /**
    * Gets list of available connectors/drivers
-   *
+   * @deprecated since version 0.5.0
    * @returns {Promise} Promise object with an array of connectors/drivers
    */
   async getConnectors(): Promise<any> {
@@ -288,19 +277,12 @@ class NexusClient {
   /**
    * Deletes user's workflow by key. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
    * @param {string} key - Workflow key
    * @returns {Promise} Promise object with `deleted` property `true` or `false`
    */
-  async deleteWorkflow(
-    userAccountId: string,
-    key: string
-  ): Promise<{ deleted: boolean }> {
+  async deleteWorkflow(key: string): Promise<{ deleted: boolean }> {
     if (!this.token) {
       throw new Error('Authentication required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account ID is required');
     }
     if (!key) {
       throw new Error('Workflow key is required');
@@ -308,7 +290,6 @@ class NexusClient {
     return await sendEngineRequest(
       'or_deleteWorkflow',
       {
-        userAccountId,
         key,
       },
       this.token
@@ -318,16 +299,12 @@ class NexusClient {
   /**
    * Requests early access to Nexus app. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
    * @param {string} email - User email
    * @returns {Promise} Promise object with `true` on success
    */
-  async requestEarlyAccess(userAccountId: string, email: string): Promise<any> {
+  async requestEarlyAccess(email: string): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account ID is required');
     }
     if (!email) {
       throw new Error('Email is required');
@@ -338,7 +315,6 @@ class NexusClient {
     return await sendEngineRequest(
       'or_requestEarlyAccess',
       {
-        userAccountId,
         email,
       },
       this.token
@@ -348,21 +324,13 @@ class NexusClient {
   /**
    * Saves user wallet address in CRM. Authentication required.
    *
-   * @param {string} userAccountId - User account ID
    * @param {string} walletAddress - User wallet address
    * @param {string} [email] - User email, optional
    * @returns {Promise} Promise object with `true` on success
    */
-  async saveWalletAddress(
-    userAccountId: string,
-    walletAddress: string,
-    email?: string
-  ): Promise<any> {
+  async saveWalletAddress(walletAddress: string, email?: string): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
-    }
-    if (!userAccountId) {
-      throw new Error('User account ID is required');
     }
     if (!walletAddress) {
       throw new Error('Wallet address is required');
@@ -373,7 +341,6 @@ class NexusClient {
     return await sendEngineRequest(
       'or_saveWalletAddress',
       {
-        userAccountId,
         email,
         walletAddress,
       },
@@ -467,6 +434,58 @@ class NexusClient {
       }`,
       body
     );
+  }
+
+  /**
+   * Gets list of drivers
+   *
+   * @since 0.5.0
+   * @param {string} environment - Set environment for getting drivers. Optional.
+   * @returns {Promise} Promise object with an array of drivers
+   */
+  async listDrivers(environment?: string): Promise<any> {
+    let driversIndexURL = `${DRIVERS_URL}/_index.json`;
+
+    if (environment && environment === 'staging') {
+      driversIndexURL = `${DRIVERS_STAGING_URL}/_index.json`;
+    }
+    const res = await axios.get(driversIndexURL).catch(() => {
+      return null;
+    });
+    if (res && res.data) {
+      return Object.keys(res.data).map(key => ({
+        ...res.data[key],
+      }));
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Gets single driver
+   *
+   * @since 0.5.0
+   * @param {string} driverKey - Driver key
+   * @param {string} environment - Set environment for getting driver. Optional.
+   * @returns {Promise} Promise object with a CDS object or `null` if driver not found
+   */
+  async getDriver(driverKey: string, environment?: string): Promise<any> {
+    if (!driverKey) {
+      throw new Error('Driver key required');
+    }
+    let driverURL = `${DRIVERS_URL}/${driverKey}.json`;
+
+    if (environment && environment === 'staging') {
+      driverURL = `${DRIVERS_STAGING_URL}/${driverKey}.json`;
+    }
+    const res = await axios.get(driverURL).catch(() => {
+      return null;
+    });
+    if (res && res.data) {
+      return res.data;
+    } else {
+      return null;
+    }
   }
 }
 
