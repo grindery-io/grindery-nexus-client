@@ -24,6 +24,16 @@
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
     * [.listDrivers(environment)](#NexusClient+listDrivers) ⇒ <code>Promise</code>
     * [.getDriver(driverKey, environment)](#NexusClient+getDriver) ⇒ <code>Promise</code>
+    * [.listWorkspaces()](#NexusClient+listWorkspaces) ⇒ <code>Promise</code>
+    * [.createWorkspace(workspace)](#NexusClient+createWorkspace) ⇒ <code>Promise</code>
+    * [.updateWorkspace(workspace)](#NexusClient+updateWorkspace) ⇒ <code>Promise</code>
+    * [.leaveWorkspace(key)](#NexusClient+leaveWorkspace) ⇒ <code>Promise</code>
+    * [.deleteWorkspace(key)](#NexusClient+deleteWorkspace) ⇒ <code>Promise</code>
+    * [.moveWorkflowToWorkspace(workflowKey, workspaceKey)](#NexusClient+moveWorkflowToWorkspace) ⇒ <code>Promise</code>
+    * [.addUserToWorkspace(key, userAccountId)](#NexusClient+addUserToWorkspace) ⇒ <code>Promise</code>
+    * [.removeUserFromWorkspace(key, userAccountId)](#NexusClient+removeUserFromWorkspace) ⇒ <code>Promise</code>
+    * [.addAdminToWorkspace(key, userAccountId)](#NexusClient+addAdminToWorkspace) ⇒ <code>Promise</code>
+    * [.removeAdminFromWorkspace(key, userAccountId)](#NexusClient+removeAdminFromWorkspace) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -236,4 +246,134 @@
 | --- | --- | --- |
 | driverKey | <code>string</code> | <p>Driver key</p> |
 | environment | <code>string</code> | <p>Set environment for getting driver. Optional.</p> |
+
+<a name="NexusClient+listWorkspaces"></a>
+
+### nexusClient.listWorkspaces() ⇒ <code>Promise</code>
+<p>Gets list of user's workspaces</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with an array of user's workspaces</p>  
+**Since**: 0.6.0  
+<a name="NexusClient+createWorkspace"></a>
+
+### nexusClient.createWorkspace(workspace) ⇒ <code>Promise</code>
+<p>Creates new workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with a created workspace key</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| workspace | <code>object</code> | <p>Workspace properties</p> |
+
+<a name="NexusClient+updateWorkspace"></a>
+
+### nexusClient.updateWorkspace(workspace) ⇒ <code>Promise</code>
+<p>Updates a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with an updated workspace</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| workspace | <code>object</code> | <p>Workspace properties</p> |
+
+<a name="NexusClient+leaveWorkspace"></a>
+
+### nexusClient.leaveWorkspace(key) ⇒ <code>Promise</code>
+<p>Removes user from a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with a <code>left</code> property equals <code>true</code> on success</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+
+<a name="NexusClient+deleteWorkspace"></a>
+
+### nexusClient.deleteWorkspace(key) ⇒ <code>Promise</code>
+<p>Deletes workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> on success</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+
+<a name="NexusClient+moveWorkflowToWorkspace"></a>
+
+### nexusClient.moveWorkflowToWorkspace(workflowKey, workspaceKey) ⇒ <code>Promise</code>
+<p>Moves workflow to a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> on success</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| workflowKey | <code>string</code> | <p>Workflow key</p> |
+| workspaceKey | <code>string</code> | <p>The destination workspace key</p> |
+
+<a name="NexusClient+addUserToWorkspace"></a>
+
+### nexusClient.addUserToWorkspace(key, userAccountId) ⇒ <code>Promise</code>
+<p>Adds user (member) to a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with updated workspace properties</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+
+<a name="NexusClient+removeUserFromWorkspace"></a>
+
+### nexusClient.removeUserFromWorkspace(key, userAccountId) ⇒ <code>Promise</code>
+<p>Removes user (member) from a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with updated workspace properties</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+
+<a name="NexusClient+addAdminToWorkspace"></a>
+
+### nexusClient.addAdminToWorkspace(key, userAccountId) ⇒ <code>Promise</code>
+<p>Adds admin to a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with updated workspace properties</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
+
+<a name="NexusClient+removeAdminFromWorkspace"></a>
+
+### nexusClient.removeAdminFromWorkspace(key, userAccountId) ⇒ <code>Promise</code>
+<p>Removes admin from a workspace</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with updated workspace properties</p>  
+**Since**: 0.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Workspace key</p> |
+| userAccountId | <code>string</code> | <p>User account ID</p> |
 

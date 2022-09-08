@@ -803,3 +803,439 @@ describe('getDriver', () => {
     await expect(client.getDriver(mockedConnector.key)).resolves.toBeNull();
   });
 });
+
+describe('listWorkspaces', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.listWorkspaces()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('returns array of workspaces on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: [
+          {
+            key: '1',
+            title: 'Workspace title',
+          },
+        ],
+      },
+    });
+    await expect(client.listWorkspaces()).resolves.toEqual([
+      {
+        key: '1',
+        title: 'Workspace title',
+      },
+    ]);
+  });
+});
+
+describe('createWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.createWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace title', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.createWorkspace({ title: '' })).rejects.toMatchObject({
+      message: 'Workspace title is required',
+    });
+  });
+
+  it('returns a workspace key on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+        },
+      },
+    });
+    await expect(client.listWorkspaces()).resolves.toEqual({
+      key: '1',
+    });
+  });
+});
+
+describe('updateWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.updateWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.updateWorkspace({ key: '' })).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('requires admins to be an array', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      // @ts-ignore
+      client.updateWorkspace({ key: '1', admins: 'admin' })
+    ).rejects.toMatchObject({
+      message: 'Admins must be an array',
+    });
+  });
+
+  it('requires users to be an array', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      // @ts-ignore
+      client.updateWorkspace({ key: '1', users: 'user' })
+    ).rejects.toMatchObject({
+      message: 'Users must be an array',
+    });
+  });
+
+  it('returns a workspace object on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+          title: 'New workspace title',
+        },
+      },
+    });
+    await expect(
+      client.updateWorkspace({ key: '1', title: 'New workspace title' })
+    ).resolves.toEqual({
+      key: '1',
+      title: 'New workspace title',
+    });
+  });
+});
+
+describe('leaveWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.leaveWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.leaveWorkspace('')).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('returns left=true on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          left: true,
+        },
+      },
+    });
+    await expect(client.leaveWorkspace('1')).resolves.toEqual({
+      left: true,
+    });
+  });
+});
+
+describe('deleteWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.deleteWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.deleteWorkspace('')).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('returns true on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(client.deleteWorkspace('1')).resolves.toEqual(true);
+  });
+});
+
+describe('moveWorkflowToWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.moveWorkflowToWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.moveWorkflowToWorkspace('1', '')).rejects.toMatchObject(
+      {
+        message: 'Workspace key is required',
+      }
+    );
+  });
+
+  it('requires workflow key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.moveWorkflowToWorkspace('', '2')).rejects.toMatchObject(
+      {
+        message: 'Workflow key is required',
+      }
+    );
+  });
+
+  it('returns true on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(client.moveWorkflowToWorkspace('1', '2')).resolves.toEqual(
+      true
+    );
+  });
+});
+
+describe('addUserToWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.addUserToWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.addUserToWorkspace('', 'userId')).rejects.toMatchObject(
+      {
+        message: 'Workspace key is required',
+      }
+    );
+  });
+
+  it('requires user ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.addUserToWorkspace('1', '')).rejects.toMatchObject({
+      message: 'User ID is required',
+    });
+  });
+
+  it('returns workspace object on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+          title: 'Workspace',
+        },
+      },
+    });
+    await expect(client.addUserToWorkspace('1', 'userId')).resolves.toEqual({
+      key: '1',
+      title: 'Workspace',
+    });
+  });
+});
+
+describe('removeUserFromWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.removeUserFromWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.removeUserFromWorkspace('', 'userId')
+    ).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('requires user ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.removeUserFromWorkspace('1', '')).rejects.toMatchObject(
+      {
+        message: 'User ID is required',
+      }
+    );
+  });
+
+  it('returns workspace object on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+          title: 'Workspace',
+        },
+      },
+    });
+    await expect(
+      client.removeUserFromWorkspace('1', 'userId')
+    ).resolves.toEqual({
+      key: '1',
+      title: 'Workspace',
+    });
+  });
+});
+
+describe('addAdminToWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.addAdminToWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.addAdminToWorkspace('', 'userId')
+    ).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('requires user ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(client.addAdminToWorkspace('1', '')).rejects.toMatchObject({
+      message: 'User ID is required',
+    });
+  });
+
+  it('returns workspace object on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+          title: 'Workspace',
+        },
+      },
+    });
+    await expect(client.addAdminToWorkspace('1', 'userId')).resolves.toEqual({
+      key: '1',
+      title: 'Workspace',
+    });
+  });
+});
+
+describe('removeAdminFromWorkspace', () => {
+  it('requires authentication', async () => {
+    const client = new NexusClient();
+    await expect(
+      // @ts-ignore
+      client.removeAdminFromWorkspace()
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires workspace key', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.removeAdminFromWorkspace('', 'userId')
+    ).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
+  });
+
+  it('requires user ID', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    await expect(
+      client.removeAdminFromWorkspace('1', '')
+    ).rejects.toMatchObject({
+      message: 'User ID is required',
+    });
+  });
+
+  it('returns workspace object on success request', async () => {
+    const client = new NexusClient();
+    client.authenticate('userToken');
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          key: '1',
+          title: 'Workspace',
+        },
+      },
+    });
+    await expect(
+      client.removeAdminFromWorkspace('1', 'userId')
+    ).resolves.toEqual({
+      key: '1',
+      title: 'Workspace',
+    });
+  });
+});
