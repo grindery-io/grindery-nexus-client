@@ -603,9 +603,6 @@ class NexusClient {
     if (!this.token) {
       throw new Error('Authentication required');
     }
-    if (!workspaceKey) {
-      throw new Error('Workspace key is required');
-    }
     if (!workflowKey) {
       throw new Error('Workflow key is required');
     }

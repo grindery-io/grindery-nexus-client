@@ -1010,16 +1010,6 @@ describe('moveWorkflowToWorkspace', () => {
     });
   });
 
-  it('requires workspace key', async () => {
-    const client = new NexusClient();
-    client.authenticate('userToken');
-    await expect(client.moveWorkflowToWorkspace('1', '')).rejects.toMatchObject(
-      {
-        message: 'Workspace key is required',
-      }
-    );
-  });
-
   it('requires workflow key', async () => {
     const client = new NexusClient();
     client.authenticate('userToken');
