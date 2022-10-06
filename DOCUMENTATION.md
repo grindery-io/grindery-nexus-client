@@ -34,6 +34,9 @@
     * [.removeUserFromWorkspace(key, userAccountId)](#NexusClient+removeUserFromWorkspace) ⇒ <code>Promise</code>
     * [.addAdminToWorkspace(key, userAccountId)](#NexusClient+addAdminToWorkspace) ⇒ <code>Promise</code>
     * [.removeAdminFromWorkspace(key, userAccountId)](#NexusClient+removeAdminFromWorkspace) ⇒ <code>Promise</code>
+    * [.listAuthCredentials(connectorId, environment)](#NexusClient+listAuthCredentials) ⇒ <code>Promise</code>
+    * [.updateAuthCredentials(key, displayName)](#NexusClient+updateAuthCredentials) ⇒ <code>Promise</code>
+    * [.putConnectorSecrets(connectorId, secrets, environment)](#NexusClient+putConnectorSecrets) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -376,4 +379,47 @@
 | --- | --- | --- |
 | key | <code>string</code> | <p>Workspace key</p> |
 | userAccountId | <code>string</code> | <p>User account ID</p> |
+
+<a name="NexusClient+listAuthCredentials"></a>
+
+### nexusClient.listAuthCredentials(connectorId, environment) ⇒ <code>Promise</code>
+<p>Gets list of user's saved authentication credentials. Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with a list of saved credentials</p>  
+**Since**: 0.7.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| connectorId | <code>string</code> | <p>Connector key</p> |
+| environment | <code>string</code> | <p>Environment (<code>production</code> or <code>staging</code>)</p> |
+
+<a name="NexusClient+updateAuthCredentials"></a>
+
+### nexusClient.updateAuthCredentials(key, displayName) ⇒ <code>Promise</code>
+<p>Updates saved authentication credential. Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with updated credential</p>  
+**Since**: 0.7.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | <p>Credential key</p> |
+| displayName | <code>string</code> | <p>New display name</p> |
+
+<a name="NexusClient+putConnectorSecrets"></a>
+
+### nexusClient.putConnectorSecrets(connectorId, secrets, environment) ⇒ <code>Promise</code>
+<p>Adds connector secrets (for admin only). Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise</p>  
+**Since**: 0.7.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| connectorId | <code>string</code> | <p>Credential key</p> |
+| secrets | <code>object</code> | <p>Object with key-value pairs</p> |
+| environment | <code>string</code> | <p>Environment (<code>production</code> or <code>staging</code>)</p> |
 

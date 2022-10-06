@@ -718,6 +718,97 @@ class NexusClient {
       this.token
     );
   }
+
+  /**
+   * Gets list of user's saved authentication credentials. Authentication required.
+   *
+   * @since 0.7.0
+   * @param {string} connectorId - Connector key
+   * @param {string} environment - Environment (`production` or `staging`)
+   * @returns {Promise} Promise object with a list of saved credentials
+   */
+   async listAuthCredentials(
+    connectorId: string,
+    environment: string
+  ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!connectorId) {
+      throw new Error('Connector ID is required');
+    }
+    if (!environment) {
+      throw new Error('Environment is required');
+    }
+    return await sendEngineRequest(
+      'or_listAuthCredentials',
+      { connectorId: connectorId, environment: environment },
+      this.token
+    );
+  }
+
+  /**
+   * Updates saved authentication credential. Authentication required.
+   *
+   * @since 0.7.0
+   * @param {string} key - Credential key
+   * @param {string} displayName - New display name
+   * @returns {Promise} Promise object with updated credential
+   */
+   async updateAuthCredentials(
+    key: string,
+    displayName: string
+  ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!key) {
+      throw new Error('Credential key is required');
+    }
+    if (!displayName) {
+      throw new Error('Display name is required');
+    }
+    return await sendEngineRequest(
+      'or_updateAuthCredentials',
+      { key: key, displayName: displayName },
+      this.token
+    );
+  }
+
+  /**
+   * Adds connector secrets (for admin only). Authentication required.
+   *
+   * @since 0.7.0
+   * @param {string} connectorId - Credential key
+   * @param {object} secrets - Object with key-value pairs
+   * @param {string} environment - Environment (`production` or `staging`)
+   * @returns {Promise} Promise
+   */
+   async putConnectorSecrets(
+    connectorId: string,
+    secrets: { [key: string]: unknown },
+    environment: string
+  ): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!connectorId) {
+      throw new Error('Connector ID is required');
+    }
+    if (!secrets) {
+      throw new Error('Secrets object is required');
+    }
+    if (!environment) {
+      throw new Error('Environment is required');
+    }
+    return await sendEngineRequest(
+      'or_putConnectorSecrets',
+      { connectorId: connectorId, secrets: secrets, environment: environment},
+      this.token
+    );
+  }
+
+
 }
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
