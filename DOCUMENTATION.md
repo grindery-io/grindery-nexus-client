@@ -37,6 +37,7 @@
     * [.listAuthCredentials(connectorId, environment)](#NexusClient+listAuthCredentials) ⇒ <code>Promise</code>
     * [.updateAuthCredentials(key, displayName)](#NexusClient+updateAuthCredentials) ⇒ <code>Promise</code>
     * [.putConnectorSecrets(connectorId, secrets, environment)](#NexusClient+putConnectorSecrets) ⇒ <code>Promise</code>
+    * [.saveNotificationsState(state)](#NexusClient+saveNotificationsState) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -422,4 +423,16 @@
 | connectorId | <code>string</code> | <p>Credential key</p> |
 | secrets | <code>object</code> | <p>Object with key-value pairs</p> |
 | environment | <code>string</code> | <p>Environment (<code>production</code> or <code>staging</code>)</p> |
+
+<a name="NexusClient+saveNotificationsState"></a>
+
+### nexusClient.saveNotificationsState(state) ⇒ <code>Promise</code>
+<p>Saves user notifications state in CRM. Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> on success</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| state | <code>string</code> | <p>User notifications state</p> |
 

@@ -27,8 +27,6 @@ class NexusClient {
    */
   private token: string | null = null;
 
-  constructor() {}
-
   /**
    * Set authentication token
    *
@@ -727,7 +725,7 @@ class NexusClient {
    * @param {string} environment - Environment (`production` or `staging`)
    * @returns {Promise} Promise object with a list of saved credentials
    */
-   async listAuthCredentials(
+  async listAuthCredentials(
     connectorId: string,
     environment: string
   ): Promise<any> {
@@ -755,10 +753,7 @@ class NexusClient {
    * @param {string} displayName - New display name
    * @returns {Promise} Promise object with updated credential
    */
-   async updateAuthCredentials(
-    key: string,
-    displayName: string
-  ): Promise<any> {
+  async updateAuthCredentials(key: string, displayName: string): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -784,7 +779,7 @@ class NexusClient {
    * @param {string} environment - Environment (`production` or `staging`)
    * @returns {Promise} Promise
    */
-   async putConnectorSecrets(
+  async putConnectorSecrets(
     connectorId: string,
     secrets: { [key: string]: unknown },
     environment: string
@@ -803,12 +798,32 @@ class NexusClient {
     }
     return await sendEngineRequest(
       'or_putConnectorSecrets',
-      { connectorId: connectorId, secrets: secrets, environment: environment},
+      { connectorId: connectorId, secrets: secrets, environment: environment },
       this.token
     );
   }
 
-
+  /**
+   * Saves user notifications state in CRM. Authentication required.
+   *
+   * @param {string} state - User notifications state
+   * @returns {Promise} Promise object with `true` on success
+   */
+  async saveNotificationsState(state: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!state) {
+      throw new Error('Notifications state is required');
+    }
+    return await sendEngineRequest(
+      'or_saveNotificationsState',
+      {
+        state,
+      },
+      this.token
+    );
+  }
 }
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
