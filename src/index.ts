@@ -807,20 +807,28 @@ class NexusClient {
    * Saves user notifications state in CRM. Authentication required.
    *
    * @param {string} state - User notifications state
+   * @param {string} notificationToken - User notification token (optional)
    * @returns {Promise} Promise object with `true` on success
    */
-  async saveNotificationsState(state: string): Promise<any> {
+  async saveNotificationsState(
+    state: string,
+    notificationToken?: string
+  ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
     if (!state) {
       throw new Error('Notifications state is required');
     }
+    const payload: { state: string; notificationToken?: string } = {
+      state,
+    };
+    if (notificationToken) {
+      payload.notificationToken = notificationToken;
+    }
     return await sendEngineRequest(
       'or_saveNotificationsState',
-      {
-        state,
-      },
+      payload,
       this.token
     );
   }
