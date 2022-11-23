@@ -38,6 +38,7 @@
     * [.updateAuthCredentials(key, displayName)](#NexusClient+updateAuthCredentials) ⇒ <code>Promise</code>
     * [.putConnectorSecrets(connectorId, secrets, environment)](#NexusClient+putConnectorSecrets) ⇒ <code>Promise</code>
     * [.saveNotificationsState(state, notificationToken)](#NexusClient+saveNotificationsState) ⇒ <code>Promise</code>
+    * [.runAction(step, input, environment)](#NexusClient+runAction) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -436,4 +437,18 @@
 | --- | --- | --- |
 | state | <code>string</code> | <p>User notifications state</p> |
 | notificationToken | <code>string</code> | <p>User notification token (optional)</p> |
+
+<a name="NexusClient+runAction"></a>
+
+### nexusClient.runAction(step, input, environment) ⇒ <code>Promise</code>
+<p>Run a single action. Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with action execution payload</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| step | <code>Operation</code> | <p>Workflow step</p> |
+| input |  | <p>Sample user input</p> |
+| environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
 
