@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 import {
   WorkflowExecution,
   WorkflowExecutionLog,
@@ -12,6 +13,9 @@ const WEB2_CONNECTORS_PATH =
 
 const WEB3_CONNECTORS_PATH =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
+
+const CHAINS_PATH = 'https://cds.grindery.org/chains';
+const CHAINS_STAGING_PATH = 'https://cds-staging.grindery.org/chains';
 
 const DRIVERS_URL = 'https://cds.grindery.org';
 const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.org';
@@ -836,6 +840,7 @@ class NexusClient {
   /**
    * Run a single action. Authentication required.
    *
+   * @since 0.9.0
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
    * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
@@ -864,6 +869,40 @@ class NexusClient {
       },
       this.token
     );
+  }
+
+  /**
+   * Gets list of supported blockchains
+   *
+   * @since 0.9.1
+   * @param {string} type - Blockchain type. One of `all`, `evm`, `non-evm`. Default value is `all`.
+   * @param {string} environment - Set environment for getting chains list. Optional.
+   * @returns {Promise} Promise object with an array of blockchains. See schema definition here: https://github.com/grindery-io/grindery-nexus-schema-v2/blob/staging/chains/README.md
+   */
+  async listChains(
+    type: 'all' | 'evm' | 'non-evm' = 'all',
+    environment?: string
+  ): Promise<any> {
+    let base = `${CHAINS_PATH}`;
+
+    if (environment && environment === 'staging') {
+      base = `${CHAINS_STAGING_PATH}`;
+    }
+    let url = base;
+    if (type === 'all') {
+      url = `${base}/_index.json`;
+    }
+    if (type === 'evm') {
+      url = `${base}/evm.json`;
+    }
+    if (type === 'non-evm') {
+      url = `${base}/non-evm.json`;
+    }
+    const res = await axios.get(url).catch(() => {
+      return null;
+    });
+
+    return (res && res.data) || [];
   }
 }
 

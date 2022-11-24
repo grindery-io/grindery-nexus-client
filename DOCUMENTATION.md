@@ -39,6 +39,7 @@
     * [.putConnectorSecrets(connectorId, secrets, environment)](#NexusClient+putConnectorSecrets) ⇒ <code>Promise</code>
     * [.saveNotificationsState(state, notificationToken)](#NexusClient+saveNotificationsState) ⇒ <code>Promise</code>
     * [.runAction(step, input, environment)](#NexusClient+runAction) ⇒ <code>Promise</code>
+    * [.listChains(type, environment)](#NexusClient+listChains) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -445,10 +446,25 @@
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with action execution payload</p>  
+**Since**: 0.9.0  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
 | environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
+
+<a name="NexusClient+listChains"></a>
+
+### nexusClient.listChains(type, environment) ⇒ <code>Promise</code>
+<p>Gets list of supported blockchains</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with an array of blockchains. See schema definition here: https://github.com/grindery-io/grindery-nexus-schema-v2/blob/staging/chains/README.md</p>  
+**Since**: 0.9.1  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| type |  | <code>all</code> | <p>Blockchain type. One of <code>all</code>, <code>evm</code>, <code>non-evm</code>. Default value is <code>all</code>.</p> |
+| environment | <code>string</code> |  | <p>Set environment for getting chains list. Optional.</p> |
 
