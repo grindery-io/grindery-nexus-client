@@ -254,6 +254,7 @@ export type FieldChoice =
       value: string;
       label: string;
       sample: string;
+      icon?: string;
     };
 
 export type FieldProviderRequest = {
