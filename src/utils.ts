@@ -114,6 +114,7 @@ export const enrichDriver = (
                         value: chain.value,
                         label: chain.label,
                         sample: chain.value,
+                        icon: chain.icon || undefined,
                       })),
                     },
                   ]
@@ -159,6 +160,7 @@ export const enrichDriver = (
                         value: chain.value,
                         label: chain.label,
                         sample: chain.value,
+                        icon: chain.icon || undefined,
                       })),
                     },
                   ]
