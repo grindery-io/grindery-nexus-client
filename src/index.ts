@@ -6,7 +6,11 @@ import {
   Operation,
   Workflow,
 } from './types';
-import { sendEngineHTTPRequest, sendEngineRequest } from './utils';
+import {
+  enrichDriver,
+  sendEngineHTTPRequest,
+  sendEngineRequest,
+} from './utils';
 
 const WEB2_CONNECTORS_PATH =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web2';
@@ -485,8 +489,12 @@ class NexusClient {
     const res = await axios.get(driverURL).catch(() => {
       return null;
     });
+    const blockchains = await this.listChains(
+      'evm',
+      environment || 'production'
+    );
     if (res && res.data) {
-      return res.data;
+      return enrichDriver(res.data, blockchains || []);
     } else {
       return null;
     }

@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { Action, Blockchain, Connector, Field, Trigger } from './types';
 
 const WORKFLOW_ENGINE_URL = 'https://orchestrator.grindery.org';
 
@@ -83,4 +84,103 @@ export const sendEngineHTTPRequest = async (
       throw new Error((error as Error).message);
     }
   }
+};
+
+export const enrichDriver = (
+  connector: Connector,
+  blockchains: Blockchain[]
+) => {
+  return {
+    ...connector,
+    triggers:
+      connector.triggers?.map((trigger: Trigger) => {
+        return {
+          ...trigger,
+          operation: {
+            ...trigger.operation,
+            inputFields: [
+              ...(trigger.operation?.type === 'blockchain:event' &&
+              (trigger.operation?.inputFields || []).filter(
+                (field: Field) => field.key === '_grinderyChain'
+              ).length < 1
+                ? [
+                    {
+                      key: '_grinderyChain',
+                      type: 'string',
+                      label: 'Blockchain',
+                      placeholder: 'Select a blockchain',
+                      required: true,
+                      choices: blockchains.map((chain: Blockchain) => ({
+                        value: chain.value,
+                        label: chain.label,
+                        sample: chain.value,
+                      })),
+                    },
+                  ]
+                : []),
+              ...(trigger.operation?.type === 'blockchain:event' &&
+              (trigger.operation?.inputFields || []).filter(
+                (field: Field) => field.key === '_grinderyContractAddress'
+              ).length < 1
+                ? [
+                    {
+                      key: '_grinderyContractAddress',
+                      type: 'string',
+                      label: 'Contract address',
+                      placeholder: 'Enter contract address',
+                      required: true,
+                    },
+                  ]
+                : []),
+              ...(trigger.operation?.inputFields || []),
+            ],
+          },
+        };
+      }) || [],
+    actions:
+      connector.actions?.map((action: Action) => {
+        return {
+          ...action,
+          operation: {
+            ...action.operation,
+            inputFields: [
+              ...(action.operation?.type === 'blockchain:call' &&
+              (action.operation?.inputFields || []).filter(
+                (field: Field) => field.key === '_grinderyChain'
+              ).length < 1
+                ? [
+                    {
+                      key: '_grinderyChain',
+                      type: 'string',
+                      label: 'Blockchain',
+                      placeholder: 'Select a blockchain',
+                      required: true,
+                      choices: blockchains.map((chain: Blockchain) => ({
+                        value: chain.value,
+                        label: chain.label,
+                        sample: chain.value,
+                      })),
+                    },
+                  ]
+                : []),
+              ...(action.operation?.type === 'blockchain:call' &&
+              (action.operation?.inputFields || []).filter(
+                (field: Field) => field.key === '_grinderyContractAddress'
+              ).length < 1
+                ? [
+                    {
+                      key: '_grinderyContractAddress',
+                      type: 'string',
+                      label: 'Contract address',
+                      placeholder: 'Enter contract address',
+                      required: true,
+                    },
+                  ]
+                : []),
+              ...(action.operation?.inputFields || []),
+            ],
+          },
+        };
+      }) || [],
+  };
 };
