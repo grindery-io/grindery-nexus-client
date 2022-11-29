@@ -475,9 +475,14 @@ class NexusClient {
    * @since 0.5.0
    * @param {string} driverKey - Driver key
    * @param {string} environment - Set environment for getting driver. Optional.
+   * @param {boolean} enrich - If driver should be enriched with automated fields. Default is `true`.
    * @returns {Promise} Promise object with a CDS object or `null` if driver not found
    */
-  async getDriver(driverKey: string, environment?: string): Promise<any> {
+  async getDriver(
+    driverKey: string,
+    environment?: string,
+    enrich: boolean = true
+  ): Promise<any> {
     if (!driverKey) {
       throw new Error('Driver key required');
     }
@@ -489,12 +494,17 @@ class NexusClient {
     const res = await axios.get(driverURL).catch(() => {
       return null;
     });
-    const blockchains = await this.listChains(
-      'evm',
-      environment || 'production'
-    );
+
     if (res && res.data) {
-      return enrichDriver(res.data, blockchains || []);
+      if (enrich) {
+        const blockchains = await this.listChains(
+          'evm',
+          environment || 'production'
+        );
+        return enrichDriver(res.data, blockchains || []);
+      } else {
+        return res.data;
+      }
     } else {
       return null;
     }
