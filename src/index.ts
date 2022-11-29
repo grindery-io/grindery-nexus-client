@@ -302,9 +302,10 @@ class NexusClient {
    * Requests early access to Nexus app. Authentication required.
    *
    * @param {string} email - User email
+   * @param {string} source - The source of request (optional)
    * @returns {Promise} Promise object with `true` on success
    */
-  async requestEarlyAccess(email: string): Promise<any> {
+  async requestEarlyAccess(email: string, source?: string): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -318,6 +319,7 @@ class NexusClient {
       'or_requestEarlyAccess',
       {
         email,
+        source: source || '',
       },
       this.token
     );

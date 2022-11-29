@@ -18,7 +18,7 @@
     * [.testAction(step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * ~~[.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>~~
     * [.deleteWorkflow(key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
-    * [.requestEarlyAccess(email)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
+    * [.requestEarlyAccess(email, source)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
     * [.saveWalletAddress(walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
@@ -173,7 +173,7 @@
 
 <a name="NexusClient+requestEarlyAccess"></a>
 
-### nexusClient.requestEarlyAccess(email) ⇒ <code>Promise</code>
+### nexusClient.requestEarlyAccess(email, source) ⇒ <code>Promise</code>
 <p>Requests early access to Nexus app. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -182,6 +182,7 @@
 | Param | Type | Description |
 | --- | --- | --- |
 | email | <code>string</code> | <p>User email</p> |
+| source | <code>string</code> | <p>The source of request (optional)</p> |
 
 <a name="NexusClient+saveWalletAddress"></a>
 
@@ -465,6 +466,6 @@
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| type |  | <code>all</code> | <p>Blockchain type. One of <code>all</code>, <code>evm</code>, <code>non-evm</code>. Default value is <code>all</code>.</p> |
+| type | <code>string</code> | <code>&quot;all&quot;</code> | <p>Blockchain type. One of <code>all</code>, <code>evm</code>, <code>non-evm</code>. Default value is <code>all</code>.</p> |
 | environment | <code>string</code> |  | <p>Set environment for getting chains list. Optional.</p> |
 
