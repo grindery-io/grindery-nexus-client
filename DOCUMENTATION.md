@@ -23,7 +23,7 @@
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
     * [.listDrivers(environment)](#NexusClient+listDrivers) ⇒ <code>Promise</code>
-    * [.getDriver(driverKey, environment)](#NexusClient+getDriver) ⇒ <code>Promise</code>
+    * [.getDriver(driverKey, environment, enrich)](#NexusClient+getDriver) ⇒ <code>Promise</code>
     * [.listWorkspaces()](#NexusClient+listWorkspaces) ⇒ <code>Promise</code>
     * [.createWorkspace(workspace)](#NexusClient+createWorkspace) ⇒ <code>Promise</code>
     * [.updateWorkspace(workspace)](#NexusClient+updateWorkspace) ⇒ <code>Promise</code>
@@ -242,17 +242,18 @@
 
 <a name="NexusClient+getDriver"></a>
 
-### nexusClient.getDriver(driverKey, environment) ⇒ <code>Promise</code>
+### nexusClient.getDriver(driverKey, environment, enrich) ⇒ <code>Promise</code>
 <p>Gets single driver</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with a CDS object or <code>null</code> if driver not found</p>  
 **Since**: 0.5.0  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| driverKey | <code>string</code> | <p>Driver key</p> |
-| environment | <code>string</code> | <p>Set environment for getting driver. Optional.</p> |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| driverKey | <code>string</code> |  | <p>Driver key</p> |
+| environment | <code>string</code> |  | <p>Set environment for getting driver. Optional.</p> |
+| enrich | <code>boolean</code> | <code>true</code> | <p>If driver should be enriched with automated fields. Default is <code>true</code>.</p> |
 
 <a name="NexusClient+listWorkspaces"></a>
 
