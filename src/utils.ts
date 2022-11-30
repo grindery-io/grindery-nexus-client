@@ -99,10 +99,11 @@ export const enrichDriver = (
           operation: {
             ...trigger.operation,
             inputFields: [
-              ...(trigger.operation?.type === 'blockchain:event' &&
-              (trigger.operation?.inputFields || []).filter(
-                (field: Field) => field.key === '_grinderyChain'
-              ).length < 1
+              ...((trigger.operation?.type === 'blockchain:event' &&
+                (trigger.operation?.inputFields || []).filter(
+                  (field: Field) => field.key === '_grinderyChain'
+                ).length < 1) ||
+              connector.key === 'evmWallet'
                 ? [
                     {
                       key: '_grinderyChain',
@@ -133,7 +134,12 @@ export const enrichDriver = (
                     },
                   ]
                 : []),
-              ...(trigger.operation?.inputFields || []),
+              ...(trigger.operation?.inputFields || []).filter(
+                (field: Field) =>
+                  (connector.key === 'evmWallet' &&
+                    field.key !== '_grinderyChain') ||
+                  connector.key !== 'evmWallet'
+              ),
             ],
           },
         };
@@ -145,10 +151,11 @@ export const enrichDriver = (
           operation: {
             ...action.operation,
             inputFields: [
-              ...(action.operation?.type === 'blockchain:call' &&
-              (action.operation?.inputFields || []).filter(
-                (field: Field) => field.key === '_grinderyChain'
-              ).length < 1
+              ...((action.operation?.type === 'blockchain:call' &&
+                (action.operation?.inputFields || []).filter(
+                  (field: Field) => field.key === '_grinderyChain'
+                ).length < 1) ||
+              connector.key === 'evmWallet'
                 ? [
                     {
                       key: '_grinderyChain',
@@ -179,7 +186,12 @@ export const enrichDriver = (
                     },
                   ]
                 : []),
-              ...(action.operation?.inputFields || []),
+              ...(action.operation?.inputFields || []).filter(
+                (field: Field) =>
+                  (connector.key === 'evmWallet' &&
+                    field.key !== '_grinderyChain') ||
+                  connector.key !== 'evmWallet'
+              ),
             ],
           },
         };
