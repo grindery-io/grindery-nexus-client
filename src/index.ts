@@ -8,6 +8,7 @@ import {
 } from './types';
 import {
   enrichDriver,
+  processDriver,
   sendEngineHTTPRequest,
   sendEngineRequest,
 } from './utils';
@@ -461,9 +462,11 @@ class NexusClient {
       return null;
     });
     if (res && res.data) {
-      return Object.keys(res.data).map(key => ({
-        ...res.data[key],
-      }));
+      return Object.keys(res.data).map(key =>
+        processDriver({
+          ...res.data[key],
+        })
+      );
     } else {
       return [];
     }
@@ -501,9 +504,9 @@ class NexusClient {
           'evm',
           environment || 'production'
         );
-        return enrichDriver(res.data, blockchains || []);
+        return enrichDriver(processDriver(res.data), blockchains || []);
       } else {
-        return res.data;
+        return processDriver(res.data);
       }
     } else {
       return null;

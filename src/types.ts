@@ -217,6 +217,7 @@ export type Display = {
   instructions?: string;
   icon?: string;
   featured?: boolean;
+  hidden?: boolean;
 };
 
 export type Field = {

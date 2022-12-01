@@ -198,3 +198,25 @@ export const enrichDriver = (
       }) || [],
   };
 };
+
+export const processDriver = (connector: Connector) => {
+  return {
+    ...connector,
+    triggers:
+      connector.triggers && connector.triggers.length > 0
+        ? [
+            ...connector.triggers.filter(
+              (trigger: Trigger) => !trigger.display?.hidden
+            ),
+          ]
+        : undefined,
+    actions:
+      connector.actions && connector.actions.length > 0
+        ? [
+            ...connector.actions.filter(
+              (action: Action) => !action.display?.hidden
+            ),
+          ]
+        : undefined,
+  };
+};
