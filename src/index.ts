@@ -1,10 +1,12 @@
 import axios from 'axios';
 import _ from 'lodash';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 import {
   WorkflowExecution,
   WorkflowExecutionLog,
   Operation,
   Workflow,
+  Connector,
 } from './types';
 import {
   enrichDriver,
@@ -25,6 +27,10 @@ const CHAINS_STAGING_PATH = 'https://cds-staging.grindery.org/chains';
 const DRIVERS_URL = 'https://cds.grindery.org';
 const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.org';
 
+interface CustomJwtPayload extends JwtPayload {
+  workspace?: string;
+}
+
 /**
  * Grindery Nexus Client
  *
@@ -36,6 +42,10 @@ class NexusClient {
    */
   private token: string | null = null;
 
+  private userId: string | null = null;
+
+  private workspaceId: string | null = null;
+
   /**
    * Set authentication token
    *
@@ -45,6 +55,9 @@ class NexusClient {
   authenticate(token: string): void {
     if (token) {
       this.token = token;
+      const decodedToken = jwt_decode<CustomJwtPayload>(token);
+      this.userId = decodedToken.sub || null;
+      this.workspaceId = decodedToken.workspace || null;
     } else {
       throw new Error('Token required');
     }
@@ -462,11 +475,24 @@ class NexusClient {
       return null;
     });
     if (res && res.data) {
-      return Object.keys(res.data).map(key =>
-        processDriver({
-          ...res.data[key],
-        })
-      );
+      const drivers = Object.keys(res.data)
+        .map(key =>
+          processDriver({
+            ...res.data[key],
+          })
+        )
+        .filter(
+          (driver: Connector) =>
+            driver &&
+            (driver.access === 'public' ||
+              (this.userId &&
+                driver.access === 'private' &&
+                driver.user === this.userId) ||
+              (this.workspaceId &&
+                driver.access === 'workspace' &&
+                driver.workspace === this.workspaceId))
+        );
+      return drivers;
     } else {
       return [];
     }
