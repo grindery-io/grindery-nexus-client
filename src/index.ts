@@ -484,13 +484,15 @@ class NexusClient {
         .filter(
           (driver: Connector) =>
             driver &&
-            (driver.access === 'public' ||
+            (!driver.access ||
+              driver.access?.toLowerCase() === 'public' ||
               (this.userId &&
-                driver.access === 'private' &&
-                driver.user === this.userId) ||
+                driver.access?.toLowerCase() === 'private' &&
+                driver.user?.toLowerCase() === this.userId.toLowerCase()) ||
               (this.workspaceId &&
-                driver.access === 'workspace' &&
-                driver.workspace === this.workspaceId))
+                driver.access?.toLowerCase() === 'workspace' &&
+                driver.workspace?.toLowerCase() ===
+                  this.workspaceId.toLowerCase()))
         );
       return drivers;
     } else {
