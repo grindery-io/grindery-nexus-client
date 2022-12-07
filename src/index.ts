@@ -1,12 +1,13 @@
 import axios from 'axios';
 import _ from 'lodash';
-import jwt_decode, { JwtPayload } from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import {
   WorkflowExecution,
   WorkflowExecutionLog,
   Operation,
   Workflow,
   Connector,
+  CustomJwtPayload,
 } from './types';
 import {
   enrichDriver,
@@ -26,10 +27,6 @@ const CHAINS_STAGING_PATH = 'https://cds-staging.grindery.org/chains';
 
 const DRIVERS_URL = 'https://cds.grindery.org';
 const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.org';
-
-interface CustomJwtPayload extends JwtPayload {
-  workspace?: string;
-}
 
 /**
  * Grindery Nexus Client

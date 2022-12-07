@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jwt-decode';
+
 export type Workflow = {
   key?: any;
   title: string;
@@ -284,3 +286,7 @@ export type Blockchain = {
   token?: string;
   tokenAddress?: string;
 };
+
+export interface CustomJwtPayload extends JwtPayload {
+  workspace?: string;
+}

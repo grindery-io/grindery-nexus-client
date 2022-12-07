@@ -14,6 +14,9 @@ export const mockedWeb2CconnectorsPath =
 export const mockedWeb3CconnectorsPath =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
 
+export const mockedToken =
+  'eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJ1cm46Z3JpbmRlcnk6YWNjZXNzLXRva2VuOnYxIiwic3ViIjoiZWlwMTU1OjE6MHg0MjQ1Y2QxMWI1YTlFNTRGNTdiRTE5QjY0M0U1NjRBQTRFZTg2RDFiIiwiaWF0IjoxNjcwNDQxNjk4LCJpc3MiOiJ1cm46Z3JpbmRlcnk6b3JjaGVzdHJhdG9yIiwiZXhwIjoxNjcwNDQ1Mjk4fQ.PLMZchj3AoxF4z8hHshLR_Hj8sSPp41qalBAHH47HgHOMjMHsC_5KZKs-hUFIdCq829vUrHTfbKx5rL6hXKv0Q';
+
 export const mockedJsonRpcPayload = {
   jsonrpc: '2.0',
   method: 'grinderyNexusConnectorUpdateFields',

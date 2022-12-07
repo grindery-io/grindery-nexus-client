@@ -11,6 +11,7 @@ import {
   mockedEmail,
   mockedWalletAddress,
   mockedJsonRpcPayload,
+  mockedToken,
 } from './mock';
 
 jest.mock('axios');
@@ -26,8 +27,8 @@ describe('authenticate method', () => {
 
   it('sets token', () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
-    expect(client.getToken()).toMatch('userToken');
+    client.authenticate(mockedToken);
+    expect(client.getToken()).toMatch(mockedToken);
   });
 });
 
@@ -41,8 +42,8 @@ describe('getToken method', () => {
 
   it('returns token', () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
-    expect(client.getToken()).toMatch('userToken');
+    client.authenticate(mockedToken);
+    expect(client.getToken()).toMatch(mockedToken);
   });
 });
 
@@ -59,7 +60,7 @@ describe('createWorkflow method', () => {
 
   it('requires workflow object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.createWorkflow()
@@ -70,7 +71,7 @@ describe('createWorkflow method', () => {
 
   it('requires workflow to have creator', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.createWorkflow({ ...mockedWorkflow, creator: '' })
     ).rejects.toMatchObject({
@@ -80,7 +81,7 @@ describe('createWorkflow method', () => {
 
   it('returns new workflow key on success', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: { result: { key: mockedWorkflowKey } },
     });
@@ -103,7 +104,7 @@ describe('listWorkflows method', () => {
 
   it('returns array on success', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({ data: { result: [] } });
     await expect(client.listWorkflows()).resolves.toEqual([]);
   });
@@ -122,7 +123,7 @@ describe('updateWorkflow method', () => {
 
   it('requires workflow key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.updateWorkflow('', mockedWorkflow)
     ).rejects.toMatchObject({
@@ -132,7 +133,7 @@ describe('updateWorkflow method', () => {
 
   it('requires workflow to have creator', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.updateWorkflow(mockedWorkflowKey, {
         title: '',
@@ -154,7 +155,7 @@ describe('updateWorkflow method', () => {
 
   it('returns workflow key on success', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: { result: { key: mockedWorkflowKey } },
     });
@@ -177,7 +178,7 @@ describe('getWorkflowExecutions method', () => {
 
   it('requires workflow key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.getWorkflowExecutions('')).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
@@ -185,7 +186,7 @@ describe('getWorkflowExecutions method', () => {
 
   it('returns an array of workflow execution IDs on success ', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: [
@@ -218,7 +219,7 @@ describe('getWorkflowExecutionLog method', () => {
 
   it('requires workflow execution ID', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.getWorkflowExecutionLog('')).rejects.toMatchObject({
       message: 'Workflow execution ID is required',
     });
@@ -226,7 +227,7 @@ describe('getWorkflowExecutionLog method', () => {
 
   it('returns an array of executed workflow steps ', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: [
@@ -259,7 +260,7 @@ describe('isAllowedUser method', () => {
 
   it('returns true if user account ID is allowed', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -282,7 +283,7 @@ describe('testAction method', () => {
 
   it('requires workflow step object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.testAction('', {})
@@ -293,7 +294,7 @@ describe('testAction method', () => {
 
   it('requires input object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.testAction(mockedWorkflow.trigger, '')
@@ -304,7 +305,7 @@ describe('testAction method', () => {
 
   it('returns action execution payload on success', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {},
@@ -372,7 +373,7 @@ describe('deleteWorkflow', () => {
 
   it('requires workflow key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.deleteWorkflow('')).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
@@ -380,7 +381,7 @@ describe('deleteWorkflow', () => {
 
   it('returns true on success deletion', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: { deleted: true },
@@ -393,7 +394,7 @@ describe('deleteWorkflow', () => {
 
   it('returns false on failed deletion', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: { deleted: false },
@@ -418,7 +419,7 @@ describe('requestEarlyAccess', () => {
 
   it('requires email', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.requestEarlyAccess('')).rejects.toMatchObject({
       message: 'Email is required',
     });
@@ -426,7 +427,7 @@ describe('requestEarlyAccess', () => {
 
   it('requires email to be valid', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.requestEarlyAccess('invalid@email')
     ).rejects.toMatchObject({
@@ -436,7 +437,7 @@ describe('requestEarlyAccess', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -459,7 +460,7 @@ describe('saveWalletAddress', () => {
 
   it('requires wallet address', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.saveWalletAddress('')).rejects.toMatchObject({
       message: 'Wallet address is required',
     });
@@ -467,7 +468,7 @@ describe('saveWalletAddress', () => {
 
   it('requires email to be valid', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.saveWalletAddress(mockedWalletAddress, 'invalid@email')
     ).rejects.toMatchObject({
@@ -477,7 +478,7 @@ describe('saveWalletAddress', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -490,7 +491,7 @@ describe('saveWalletAddress', () => {
 
   it('returns true on success request with valid email', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -515,7 +516,7 @@ describe('callInputProvider', () => {
 
   it('requires connector key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.callInputProvider('', '', {})).rejects.toMatchObject({
       message: 'Connector key is required',
     });
@@ -523,7 +524,7 @@ describe('callInputProvider', () => {
 
   it('requires operation key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', '', {})
     ).rejects.toMatchObject({
@@ -533,7 +534,7 @@ describe('callInputProvider', () => {
 
   it('requires JSON RPC request object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', 'operationKey', false)
     ).rejects.toMatchObject({
@@ -543,7 +544,7 @@ describe('callInputProvider', () => {
 
   it('requires JSON RPC request object to have method', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
@@ -557,7 +558,7 @@ describe('callInputProvider', () => {
 
   it('requires JSON RPC request object to have version 2.0', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
@@ -570,7 +571,7 @@ describe('callInputProvider', () => {
 
   it('requires JSON RPC request object to have params.key property', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
@@ -586,7 +587,7 @@ describe('callInputProvider', () => {
 
   it('requires JSON RPC request params key property to match operation key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.callInputProvider('connectorKey', 'operationKey', {
         ...mockedJsonRpcPayload,
@@ -602,7 +603,7 @@ describe('callInputProvider', () => {
 
   it('returns input fields schema on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.request.mockResolvedValue({
       data: {
         result: {
@@ -817,7 +818,7 @@ describe('listWorkspaces', () => {
 
   it('returns array of workspaces on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: [
@@ -850,7 +851,7 @@ describe('createWorkspace', () => {
 
   it('requires workspace title', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.createWorkspace({ title: '' })).rejects.toMatchObject({
       message: 'Workspace title is required',
     });
@@ -858,7 +859,7 @@ describe('createWorkspace', () => {
 
   it('returns a workspace key on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -885,7 +886,7 @@ describe('updateWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.updateWorkspace({ key: '' })).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
@@ -893,7 +894,7 @@ describe('updateWorkspace', () => {
 
   it('requires admins to be an array', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.updateWorkspace({ key: '1', admins: 'admin' })
@@ -904,7 +905,7 @@ describe('updateWorkspace', () => {
 
   it('requires users to be an array', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.updateWorkspace({ key: '1', users: 'user' })
@@ -915,7 +916,7 @@ describe('updateWorkspace', () => {
 
   it('returns a workspace object on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -946,7 +947,7 @@ describe('leaveWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.leaveWorkspace('')).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
@@ -954,7 +955,7 @@ describe('leaveWorkspace', () => {
 
   it('returns left=true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -981,7 +982,7 @@ describe('deleteWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.deleteWorkspace('')).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
@@ -989,7 +990,7 @@ describe('deleteWorkspace', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -1012,7 +1013,7 @@ describe('moveWorkflowToWorkspace', () => {
 
   it('requires workflow key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.moveWorkflowToWorkspace('', '2')).rejects.toMatchObject(
       {
         message: 'Workflow key is required',
@@ -1022,7 +1023,7 @@ describe('moveWorkflowToWorkspace', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -1047,7 +1048,7 @@ describe('addUserToWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.addUserToWorkspace('', 'userId')).rejects.toMatchObject(
       {
         message: 'Workspace key is required',
@@ -1057,7 +1058,7 @@ describe('addUserToWorkspace', () => {
 
   it('requires user ID', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.addUserToWorkspace('1', '')).rejects.toMatchObject({
       message: 'User ID is required',
     });
@@ -1065,7 +1066,7 @@ describe('addUserToWorkspace', () => {
 
   it('returns workspace object on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -1094,7 +1095,7 @@ describe('removeUserFromWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.removeUserFromWorkspace('', 'userId')
     ).rejects.toMatchObject({
@@ -1104,7 +1105,7 @@ describe('removeUserFromWorkspace', () => {
 
   it('requires user ID', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.removeUserFromWorkspace('1', '')).rejects.toMatchObject(
       {
         message: 'User ID is required',
@@ -1114,7 +1115,7 @@ describe('removeUserFromWorkspace', () => {
 
   it('returns workspace object on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -1145,7 +1146,7 @@ describe('addAdminToWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.addAdminToWorkspace('', 'userId')
     ).rejects.toMatchObject({
@@ -1155,7 +1156,7 @@ describe('addAdminToWorkspace', () => {
 
   it('requires user ID', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.addAdminToWorkspace('1', '')).rejects.toMatchObject({
       message: 'User ID is required',
     });
@@ -1163,7 +1164,7 @@ describe('addAdminToWorkspace', () => {
 
   it('returns workspace object on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -1192,7 +1193,7 @@ describe('removeAdminFromWorkspace', () => {
 
   it('requires workspace key', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.removeAdminFromWorkspace('', 'userId')
     ).rejects.toMatchObject({
@@ -1202,7 +1203,7 @@ describe('removeAdminFromWorkspace', () => {
 
   it('requires user ID', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       client.removeAdminFromWorkspace('1', '')
     ).rejects.toMatchObject({
@@ -1212,7 +1213,7 @@ describe('removeAdminFromWorkspace', () => {
 
   it('returns workspace object on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {
@@ -1243,7 +1244,7 @@ describe('saveNotificationsState', () => {
 
   it('requires state string', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(client.saveNotificationsState('')).rejects.toMatchObject({
       message: 'Notifications state is required',
     });
@@ -1251,7 +1252,7 @@ describe('saveNotificationsState', () => {
 
   it('returns true on success request', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: true,
@@ -1276,7 +1277,7 @@ describe('runAction method', () => {
 
   it('requires workflow step object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.runAction('', {})
@@ -1287,7 +1288,7 @@ describe('runAction method', () => {
 
   it('requires input object', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     await expect(
       // @ts-ignore
       client.runAction(mockedWorkflow.trigger, '')
@@ -1298,7 +1299,7 @@ describe('runAction method', () => {
 
   it('returns action execution payload on success', async () => {
     const client = new NexusClient();
-    client.authenticate('userToken');
+    client.authenticate(mockedToken);
     mockedAxios.post.mockResolvedValue({
       data: {
         result: {},
