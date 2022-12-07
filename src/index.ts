@@ -204,13 +204,18 @@ class NexusClient {
   /**
    * Checks if user is approved for early access. Authentication required.
    *
+   * @param {string} app - Application for which the access is checked. One of: `flow`, `cds`, `gateway` or `ping`.
    * @returns {Promise} Promise object with `true` if user is allowed and `false` if not
    */
-  async isAllowedUser(): Promise<any> {
+  async isAllowedUser(app?: 'flow' | 'gateway' | 'cds' | 'ping'): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
-    return await sendEngineRequest('or_isAllowedUser', {}, this.token);
+    return await sendEngineRequest(
+      'or_isAllowedUser',
+      { app: app || undefined },
+      this.token
+    );
   }
 
   /**

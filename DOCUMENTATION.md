@@ -14,7 +14,7 @@
     * [.updateWorkflow(key, workflow)](#NexusClient+updateWorkflow) ⇒ <code>Promise</code>
     * [.getWorkflowExecutions(workflowKey, since, until, limit)](#NexusClient+getWorkflowExecutions) ⇒ <code>Promise</code>
     * [.getWorkflowExecutionLog(executionId)](#NexusClient+getWorkflowExecutionLog) ⇒ <code>Promise</code>
-    * [.isAllowedUser()](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
+    * [.isAllowedUser(app)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
     * [.testAction(step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * ~~[.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>~~
     * [.deleteWorkflow(key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
@@ -131,11 +131,16 @@
 
 <a name="NexusClient+isAllowedUser"></a>
 
-### nexusClient.isAllowedUser() ⇒ <code>Promise</code>
+### nexusClient.isAllowedUser(app) ⇒ <code>Promise</code>
 <p>Checks if user is approved for early access. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user is allowed and <code>false</code> if not</p>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| app | <code>string</code> | <p>Application for which the access is checked. One of: <code>flow</code>, <code>cds</code>, <code>gateway</code> or <code>ping</code>.</p> |
+
 <a name="NexusClient+testAction"></a>
 
 ### nexusClient.testAction(step, input, environment) ⇒ <code>Promise</code>
