@@ -18,7 +18,7 @@
     * [.testAction(step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * ~~[.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>~~
     * [.deleteWorkflow(key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
-    * [.requestEarlyAccess(email, source)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
+    * [.requestEarlyAccess(email, source, app)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
     * [.saveWalletAddress(walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
@@ -178,7 +178,7 @@
 
 <a name="NexusClient+requestEarlyAccess"></a>
 
-### nexusClient.requestEarlyAccess(email, source) ⇒ <code>Promise</code>
+### nexusClient.requestEarlyAccess(email, source, app) ⇒ <code>Promise</code>
 <p>Requests early access to Nexus app. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -188,6 +188,7 @@
 | --- | --- | --- |
 | email | <code>string</code> | <p>User email</p> |
 | source | <code>string</code> | <p>The source of request (optional)</p> |
+| app | <code>string</code> | <p>The App to which access is requested (optional)</p> |
 
 <a name="NexusClient+saveWalletAddress"></a>
 
