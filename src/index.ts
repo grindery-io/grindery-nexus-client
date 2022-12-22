@@ -963,7 +963,44 @@ class NexusClient {
 
     return (res && res.data) || [];
   }
+
+  /**
+   * Gets user information
+   *
+   * @since 0.9.9
+   * @returns {User|null} User information object or `null` if user is not authenticated.
+   
+   */
+  getUser(): null | {
+    id: string;
+    address: string;
+    address_short: string;
+    workspace: string | null;
+  } {
+    if (!this.token || !this.userId) {
+      return null;
+    }
+    const id = this.userId;
+    const address = id.split(':')[2];
+    const address_short = `${address.substring(0, 6)}...${address.substring(
+      address.length - 4
+    )}`;
+    return {
+      id,
+      address,
+      address_short,
+      workspace: this.workspaceId || null,
+    };
+  }
 }
+
+/**
+ * @typedef {Object} User
+ * @property {string} id - User ID, e.g. eip155:1:0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.
+ * @property {string} address - User wallet address, e.g. 0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.
+ * @property {string} address_short - User wallet address in short format, e.g. 0x44Ab...f5c0.
+ * @property {string|null} workspace - User's workspace id, or null for default workspace.
+ */
 
 export { Operation, Workflow, WorkflowExecution, WorkflowExecutionLog };
 

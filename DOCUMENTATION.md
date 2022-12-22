@@ -1,3 +1,17 @@
+## Classes
+
+<dl>
+<dt><a href="#NexusClient">NexusClient</a></dt>
+<dd><p>Grindery Nexus Client</p></dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#User">User</a> : <code>Object</code></dt>
+<dd></dd>
+</dl>
+
 <a name="NexusClient"></a>
 
 ## NexusClient
@@ -40,6 +54,7 @@
     * [.saveNotificationsState(state, notificationToken)](#NexusClient+saveNotificationsState) ⇒ <code>Promise</code>
     * [.runAction(step, input, environment)](#NexusClient+runAction) ⇒ <code>Promise</code>
     * [.listChains(type, environment)](#NexusClient+listChains) ⇒ <code>Promise</code>
+    * [.getUser()](#NexusClient+getUser) ⇒ [<code>User</code>](#User) \| <code>null</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -475,4 +490,27 @@
 | --- | --- | --- | --- |
 | type | <code>string</code> | <code>&quot;all&quot;</code> | <p>Blockchain type. One of <code>all</code>, <code>evm</code>, <code>non-evm</code>. Default value is <code>all</code>.</p> |
 | environment | <code>string</code> |  | <p>Set environment for getting chains list. Optional.</p> |
+
+<a name="NexusClient+getUser"></a>
+
+### nexusClient.getUser() ⇒ [<code>User</code>](#User) \| <code>null</code>
+<p>Gets user information</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: [<code>User</code>](#User) \| <code>null</code> - <ul>
+<li>User information object or <code>null</code> if user is not authenticated.</li>
+</ul>  
+**Since**: 0.9.9  
+<a name="User"></a>
+
+## User : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | <p>User ID, e.g. eip155:1:0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.</p> |
+| address | <code>string</code> | <p>User wallet address, e.g. 0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.</p> |
+| address_short | <code>string</code> | <p>User wallet address in short format, e.g. 0x44Ab...f5c0.</p> |
+| workspace | <code>string</code> \| <code>null</code> | <p>User's workspace id, or null for default workspace.</p> |
 
