@@ -55,6 +55,7 @@
     * [.runAction(step, input, environment)](#NexusClient+runAction) ⇒ <code>Promise</code>
     * [.listChains(type, environment)](#NexusClient+listChains) ⇒ <code>Promise</code>
     * [.getUser()](#NexusClient+getUser) ⇒ [<code>User</code>](#User) \| <code>null</code>
+    * [.isUserHasEmail()](#NexusClient+isUserHasEmail) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -497,10 +498,16 @@
 <p>Gets user information</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
-**Returns**: [<code>User</code>](#User) \| <code>null</code> - <ul>
-<li>User information object or <code>null</code> if user is not authenticated.</li>
-</ul>  
+**Returns**: [<code>User</code>](#User) \| <code>null</code> - <p>User information object or <code>null</code> if user is not authenticated.</p>  
 **Since**: 0.9.9  
+<a name="NexusClient+isUserHasEmail"></a>
+
+### nexusClient.isUserHasEmail() ⇒ <code>Promise</code>
+<p>Checks if user has email. Authentication required.</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user has email and <code>false</code> if not</p>  
+**Since**: 0.9.10  
 <a name="User"></a>
 
 ## User : <code>Object</code>

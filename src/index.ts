@@ -992,6 +992,19 @@ class NexusClient {
       workspace: this.workspaceId || null,
     };
   }
+
+  /**
+   * Checks if user has email. Authentication required.
+   *
+   * @since 0.9.10
+   * @returns {Promise} Promise object with `true` if user has email and `false` if not
+   */
+  async isUserHasEmail(): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return await sendEngineRequest('or_isUserHasEmail', {}, this.token);
+  }
 }
 
 /**
