@@ -56,6 +56,8 @@
     * [.listChains(type, environment)](#NexusClient+listChains) ⇒ <code>Promise</code>
     * [.getUser()](#NexusClient+getUser) ⇒ [<code>User</code>](#User) \| <code>null</code>
     * [.isUserHasEmail()](#NexusClient+isUserHasEmail) ⇒ <code>Promise</code>
+    * [.updateUserEmail()](#NexusClient+updateUserEmail) ⇒ <code>Promise</code>
+    * [.deleteUser()](#NexusClient+deleteUser) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -508,6 +510,22 @@
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user has email and <code>false</code> if not</p>  
 **Since**: 0.9.10  
+<a name="NexusClient+updateUserEmail"></a>
+
+### nexusClient.updateUserEmail() ⇒ <code>Promise</code>
+<p>Updates user email address</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user email was updated or <code>false</code> if not</p>  
+**Since**: 0.9.11  
+<a name="NexusClient+deleteUser"></a>
+
+### nexusClient.deleteUser() ⇒ <code>Promise</code>
+<p>Deletes user account</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user account was deleted</p>  
+**Since**: 0.9.11  
 <a name="User"></a>
 
 ## User : <code>Object</code>

@@ -1005,6 +1005,35 @@ class NexusClient {
     }
     return await sendEngineRequest('or_isUserHasEmail', {}, this.token);
   }
+
+  /**
+   * Updates user email address
+   *
+   * @since 0.9.11
+   * @returns {Promise} Promise object with `true` if user email was updated or `false` if not
+   */
+  async updateUserEmail(email: string): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!email) {
+      throw new Error('Email is required');
+    }
+    return await sendEngineRequest('or_updateUserEmail', { email }, this.token);
+  }
+
+  /**
+   * Deletes user account
+   *
+   * @since 0.9.11
+   * @returns {Promise} Promise object with `true` if user account was deleted
+   */
+  async deleteUser(): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return await sendEngineRequest('or_deleteUser', {}, this.token);
+  }
 }
 
 /**
