@@ -27,7 +27,7 @@ export const sendEngineRequest = async (
         headers,
       }
     );
-    if (res && res.data && res.data.result) {
+    if (res && res.data && typeof res.data.result !== 'undefined') {
       return res.data.result;
     } else {
       throw new Error('Unknown error');

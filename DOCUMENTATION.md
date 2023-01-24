@@ -58,6 +58,7 @@
     * [.isUserHasEmail()](#NexusClient+isUserHasEmail) ⇒ <code>Promise</code>
     * [.updateUserEmail()](#NexusClient+updateUserEmail) ⇒ <code>Promise</code>
     * [.deleteUser()](#NexusClient+deleteUser) ⇒ <code>Promise</code>
+    * [.getUserEmail()](#NexusClient+getUserEmail) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -526,6 +527,14 @@
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user account was deleted</p>  
 **Since**: 0.9.11  
+<a name="NexusClient+getUserEmail"></a>
+
+### nexusClient.getUserEmail() ⇒ <code>Promise</code>
+<p>Gets user email address</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with user email if exists, or <code>null</code> if not.</p>  
+**Since**: 0.9.12  
 <a name="User"></a>
 
 ## User : <code>Object</code>

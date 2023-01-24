@@ -1034,6 +1034,19 @@ class NexusClient {
     }
     return await sendEngineRequest('or_deleteUser', {}, this.token);
   }
+
+  /**
+   * Gets user email address
+   *
+   * @since 0.9.12
+   * @returns {Promise} Promise object with user email if exists, or `null` if not.
+   */
+  async getUserEmail(): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return await sendEngineRequest('or_getUserEmail', {}, this.token);
+  }
 }
 
 /**
