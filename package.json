@@ -1,5 +1,5 @@
 {
-  "version": "0.9.12",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -18,7 +18,7 @@
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "build:doc": "jsdoc2md --files ./src/*.ts --configure ./jsdoc2md.json > ./DOCUMENTATION.md"
+    "build:doc": "jsdoc2md --files ./src/**/*.ts --configure ./jsdoc2md.json > ./DOCUMENTATION.md"
   },
   "peerDependencies": {},
   "husky": {

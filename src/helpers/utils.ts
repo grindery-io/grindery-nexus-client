@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
-import { Action, Blockchain, Connector, Field, Trigger } from './types';
+import { Action, Blockchain, Connector, Field, Trigger } from '../types/types';
+import { CHAINS_PATH, CHAINS_STAGING_PATH } from './constants';
 
 const WORKFLOW_ENGINE_URL = 'https://orchestrator.grindery.org';
 
@@ -219,4 +220,30 @@ export const processDriver = (connector: Connector) => {
           ]
         : undefined,
   };
+};
+
+export const listChains = async (
+  type: 'all' | 'evm' | 'non-evm' = 'all',
+  environment?: string
+): Promise<any> => {
+  let base = `${CHAINS_PATH}`;
+
+  if (environment && environment === 'staging') {
+    base = `${CHAINS_STAGING_PATH}`;
+  }
+  let url = base;
+  if (type === 'all') {
+    url = `${base}/_index.json`;
+  }
+  if (type === 'evm') {
+    url = `${base}/evm.json`;
+  }
+  if (type === 'non-evm') {
+    url = `${base}/non-evm.json`;
+  }
+  const res = await axios.get(url).catch(() => {
+    return null;
+  });
+
+  return (res && res.data) || [];
 };

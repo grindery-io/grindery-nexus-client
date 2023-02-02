@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sendEngineHTTPRequest, sendEngineRequest } from '../src/utils';
+import { sendEngineHTTPRequest, sendEngineRequest } from '../src/helpers/utils';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

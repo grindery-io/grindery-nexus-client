@@ -1,4 +1,4 @@
-import { Workflow } from '../src/types';
+import { Workflow } from '../src/types/types';
 
 export const mockedWorkflowKey = 'workflow-key';
 

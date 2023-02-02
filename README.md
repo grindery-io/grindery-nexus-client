@@ -15,26 +15,20 @@ or
 ### Import client class
 
 ```js
-import NexusClient from 'grindery-nexus-client';
+import GrinderyClient from 'grindery-nexus-client';
 ```
 
 ### Init client
 
 ```js
-const client = new NexusClient();
-```
-
-### Set authentication token
-
-```js
-client.authenticate('{userToken}');
+const client = new GrinderyClient('{user_authentication_token}');
 ```
 
 ### Call client methods
 
 ```js
 const listWorkflows = async () => {
-  const workflows = await client.listWorkflows();
+  const workflows = await client.workflow.list();
 };
 ```
 
