@@ -5,6 +5,7 @@ import { Workflow as WorkflowType } from '../types/types';
  * Workflow class
  *
  * @description A class to interact with workflow object
+ * @memberof GrinderyClient
  */
 class Workflow {
   /**

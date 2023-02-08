@@ -3,9 +3,9 @@ import { CustomJwtPayload } from '../types/types';
 import { sendEngineRequest } from '../helpers/utils';
 
 /**
- * User details object definition
+ * User object properties
  *
- * @typedef {Object} User
+ * @typedef {Object} UserProps
  * @property {string} id - User ID, e.g. eip155:1:0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.
  * @property {string} address - User wallet address, e.g. 0x44Ab2C419132f3fFE29420dC01AD03A5F2fdf5c0.
  * @property {string} address_short - User wallet address in short format, e.g. 0x44Ab...f5c0.
@@ -16,6 +16,8 @@ import { sendEngineRequest } from '../helpers/utils';
  * User class
  *
  * @description A class to interact with user object
+ * @class
+ * @memberof GrinderyClient
  */
 class User {
   /**
@@ -46,8 +48,7 @@ class User {
    * Gets user information
    *
    * @since 0.9.9
-   * @returns {User|null} User information object or `null` if user is not authenticated.
-   
+   * @returns {UserProps|null} User information object or `null` if user is not authenticated. See {@link UserProps} definition.
    */
   get(): null | {
     id: string;

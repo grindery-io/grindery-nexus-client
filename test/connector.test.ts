@@ -15,7 +15,7 @@ describe('connector.get', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.connector.get()
+      client.connector.get({})
     ).rejects.toMatchObject({
       message: 'Driver key required',
     });
@@ -27,7 +27,7 @@ describe('connector.get', () => {
       data: mockedConnector,
     });
     await expect(
-      client.connector.get(mockedConnector.key)
+      client.connector.get({ driverKey: mockedConnector.key })
     ).resolves.toMatchObject(mockedConnector);
   });
 
@@ -37,14 +37,30 @@ describe('connector.get', () => {
       data: mockedConnector,
     });
     await expect(
-      client.connector.get(mockedConnector.key)
+      client.connector.get({ driverKey: mockedConnector.key })
+    ).resolves.toMatchObject(mockedConnector);
+  });
+
+  it('returns not enriched driver object on success', async () => {
+    const client = new GrinderyClient();
+    mockedAxios.get.mockResolvedValue({
+      data: mockedConnector,
+    });
+    await expect(
+      client.connector.get({
+        driverKey: mockedConnector.key,
+        environment: 'staging',
+        enrich: false,
+      })
     ).resolves.toMatchObject(mockedConnector);
   });
 
   it('returns null on fail', async () => {
     const client = new GrinderyClient();
     mockedAxios.get.mockRejectedValue(new Error('server error'));
-    await expect(client.connector.get(mockedConnector.key)).resolves.toBeNull();
+    await expect(
+      client.connector.get({ driverKey: mockedConnector.key })
+    ).resolves.toBeNull();
   });
 });
 
@@ -54,7 +70,7 @@ describe('connector.list', () => {
     mockedAxios.get.mockResolvedValue({
       data: { [mockedConnector.key]: mockedConnector },
     });
-    await expect(client.connector.list()).resolves.toMatchObject([
+    await expect(client.connector.list({})).resolves.toMatchObject([
       mockedConnector,
     ]);
   });
@@ -64,15 +80,25 @@ describe('connector.list', () => {
     mockedAxios.get.mockResolvedValue({
       data: { [mockedConnector.key]: mockedConnector },
     });
-    await expect(client.connector.list()).resolves.toMatchObject([
+    await expect(client.connector.list({})).resolves.toMatchObject([
       mockedConnector,
     ]);
+  });
+
+  it('returns a staging array on success', async () => {
+    const client = new GrinderyClient();
+    mockedAxios.get.mockResolvedValue({
+      data: { [mockedConnector.key]: mockedConnector },
+    });
+    await expect(
+      client.connector.list({ environment: 'staging' })
+    ).resolves.toMatchObject([mockedConnector]);
   });
 
   it('returns an empty array on fail', async () => {
     const client = new GrinderyClient();
     mockedAxios.get.mockRejectedValue(new Error('Server error'));
-    await expect(client.connector.list()).resolves.toMatchObject([]);
+    await expect(client.connector.list({})).resolves.toMatchObject([]);
   });
 });
 
@@ -81,7 +107,7 @@ describe('connector.testAction method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.connector.testAction()
+      client.connector.testAction({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -101,7 +127,7 @@ describe('connector.testAction method', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.connector.testAction(mockedWorkflow.trigger, '')
+      client.connector.testAction({ step: mockedWorkflow.trigger, input: '' })
     ).rejects.toMatchObject({
       message: 'Sample input object is required',
     });
@@ -115,7 +141,7 @@ describe('connector.testAction method', () => {
       },
     });
     await expect(
-      client.connector.testAction(mockedWorkflow.trigger, {})
+      client.connector.testAction({ step: mockedWorkflow.trigger, input: {} })
     ).resolves.toEqual({});
   });
 });
@@ -125,7 +151,7 @@ describe('connector.runAction method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.connector.runAction()
+      client.connector.runAction({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -135,7 +161,7 @@ describe('connector.runAction method', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.connector.runAction('', {})
+      client.connector.runAction({ step: '', input: {} })
     ).rejects.toMatchObject({
       message: 'Workflow step object is required',
     });
@@ -145,7 +171,7 @@ describe('connector.runAction method', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.connector.runAction(mockedWorkflow.trigger, '')
+      client.connector.runAction({ step: mockedWorkflow.trigger, input: '' })
     ).rejects.toMatchObject({
       message: 'Sample input object is required',
     });
@@ -159,7 +185,7 @@ describe('connector.runAction method', () => {
       },
     });
     await expect(
-      client.connector.runAction(mockedWorkflow.trigger, {})
+      client.connector.runAction({ step: mockedWorkflow.trigger, input: {} })
     ).resolves.toEqual({});
   });
 });
@@ -169,7 +195,7 @@ describe('connector.callInputProvider', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.connector.callInputProvider()
+      client.connector.callInputProvider({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -178,7 +204,11 @@ describe('connector.callInputProvider', () => {
   it('requires connector key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('', '', {})
+      client.connector.callInputProvider({
+        connectorKey: '',
+        operationKey: '',
+        body: {},
+      })
     ).rejects.toMatchObject({
       message: 'Connector key is required',
     });
@@ -187,7 +217,11 @@ describe('connector.callInputProvider', () => {
   it('requires operation key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', '', {})
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: '',
+        body: {},
+      })
     ).rejects.toMatchObject({
       message: 'Operation key is required',
     });
@@ -196,7 +230,11 @@ describe('connector.callInputProvider', () => {
   it('requires JSON RPC request object', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', 'operationKey', false)
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: false,
+      })
     ).rejects.toMatchObject({
       message: 'JSON RPC request object is required',
     });
@@ -205,9 +243,13 @@ describe('connector.callInputProvider', () => {
   it('requires JSON RPC request object to have method', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', 'operationKey', {
-        ...mockedJsonRpcPayload,
-        method: '',
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: {
+          ...mockedJsonRpcPayload,
+          method: '',
+        },
       })
     ).rejects.toMatchObject({
       message:
@@ -218,9 +260,13 @@ describe('connector.callInputProvider', () => {
   it('requires JSON RPC request object to have version 2.0', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', 'operationKey', {
-        ...mockedJsonRpcPayload,
-        jsonrpc: '1.0',
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: {
+          ...mockedJsonRpcPayload,
+          jsonrpc: '1.0',
+        },
       })
     ).rejects.toMatchObject({
       message: 'JSON RPC request object must have 2.0 version',
@@ -230,10 +276,14 @@ describe('connector.callInputProvider', () => {
   it('requires JSON RPC request object to have params.key property', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', 'operationKey', {
-        ...mockedJsonRpcPayload,
-        params: {
-          key: '',
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: {
+          ...mockedJsonRpcPayload,
+          params: {
+            key: '',
+          },
         },
       })
     ).rejects.toMatchObject({
@@ -245,10 +295,14 @@ describe('connector.callInputProvider', () => {
   it('requires JSON RPC request params key property to match operation key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.connector.callInputProvider('connectorKey', 'operationKey', {
-        ...mockedJsonRpcPayload,
-        params: {
-          key: 'notOperationKey',
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: {
+          ...mockedJsonRpcPayload,
+          params: {
+            key: 'notOperationKey',
+          },
         },
       })
     ).rejects.toMatchObject({
@@ -267,11 +321,11 @@ describe('connector.callInputProvider', () => {
       },
     });
     await expect(
-      client.connector.callInputProvider(
-        'connectorKey',
-        'operationKey',
-        mockedJsonRpcPayload
-      )
+      client.connector.callInputProvider({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: mockedJsonRpcPayload,
+      })
     ).resolves.toEqual({ inputFields: [] });
   });
 });
@@ -280,7 +334,11 @@ describe('connector.callWebhook', () => {
   it('requires connector key', async () => {
     const client = new GrinderyClient();
     await expect(
-      client.connector.callWebhook('', '', {})
+      client.connector.callWebhook({
+        connectorKey: '',
+        operationKey: '',
+        body: {},
+      })
     ).rejects.toMatchObject({
       message: 'Connector key is required',
     });
@@ -289,7 +347,11 @@ describe('connector.callWebhook', () => {
   it('requires operation key', async () => {
     const client = new GrinderyClient();
     await expect(
-      client.connector.callWebhook('connectorKey', '', {})
+      client.connector.callWebhook({
+        connectorKey: 'connectorKey',
+        operationKey: '',
+        body: {},
+      })
     ).rejects.toMatchObject({
       message: 'Operation key is required',
     });
@@ -298,7 +360,11 @@ describe('connector.callWebhook', () => {
   it('requires body object', async () => {
     const client = new GrinderyClient();
     await expect(
-      client.connector.callWebhook('connectorKey', 'operationKey', false)
+      client.connector.callWebhook({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: false,
+      })
     ).rejects.toMatchObject({
       message: 'Body object is required',
     });
@@ -316,7 +382,76 @@ describe('connector.callWebhook', () => {
       },
     });
     await expect(
-      client.connector.callWebhook('connectorKey', 'operationKey', {})
+      client.connector.callWebhook({
+        connectorKey: 'connectorKey',
+        operationKey: 'operationKey',
+        body: {},
+      })
     ).resolves.toEqual({ jsonrpc: '2.0', result: {}, id: '1' });
+  });
+});
+
+describe('connector.putSecrets', () => {
+  it('requires authentication', async () => {
+    const client = new GrinderyClient();
+    await expect(
+      // @ts-ignore
+      client.connector.putSecrets({})
+    ).rejects.toMatchObject({
+      message: 'Authentication required',
+    });
+  });
+
+  it('requires connector ID', async () => {
+    const client = new GrinderyClient(mockedToken);
+    await expect(
+      // @ts-ignore
+      client.connector.putSecrets({})
+    ).rejects.toMatchObject({
+      message: 'Connector ID is required',
+    });
+  });
+
+  it('requires secrets', async () => {
+    const client = new GrinderyClient(mockedToken);
+    await expect(
+      // @ts-ignore
+      client.connector.putSecrets({ connectorId: mockedConnector.key })
+    ).rejects.toMatchObject({
+      message: 'Secrets object is required',
+    });
+  });
+
+  it('requires environment', async () => {
+    const client = new GrinderyClient(mockedToken);
+    await expect(
+      // @ts-ignore
+      client.connector.putSecrets({
+        connectorId: mockedConnector.key,
+        secrets: {},
+      })
+    ).rejects.toMatchObject({
+      message: 'Environment is required',
+    });
+  });
+
+  it('returns true on success request', async () => {
+    const client = new GrinderyClient(mockedToken);
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: {
+          jsonrpc: '2.0',
+          result: true,
+          id: '1',
+        },
+      },
+    });
+    await expect(
+      client.connector.putSecrets({
+        connectorId: mockedConnector.key,
+        secrets: {},
+        environment: 'staging',
+      })
+    ).resolves.toEqual({ jsonrpc: '2.0', result: true, id: '1' });
   });
 });

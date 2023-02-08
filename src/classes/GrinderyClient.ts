@@ -14,32 +14,32 @@ class GrinderyClient {
   /**
    * A class to interact with user object
    */
-  user: User;
+  public user: User;
 
   /**
    * A class to interact with workflow object
    */
-  workflow: Workflow;
+  public workflow: Workflow;
 
   /**
    * A class to interact with authentication credentials
    */
-  credentials: Credentials;
+  public credentials: Credentials;
 
   /**
    * A class to interact with connectors
    */
-  connector: Connector;
+  public connector: Connector;
 
   /**
    * A class to interact with blockchains
    */
-  chain: Chain;
+  public chain: Chain;
 
   /**
    * A class to interact with workspaces
    */
-  workspace: Workspace;
+  public workspace: Workspace;
 
   constructor(token?: string) {
     this.user = new User(token);

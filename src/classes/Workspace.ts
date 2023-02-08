@@ -4,6 +4,7 @@ import { sendEngineRequest } from '../helpers/utils';
  * Workspace class
  *
  * @description A class to interact with workspaces
+ * @memberof GrinderyClient
  */
 class Workspace {
   /**

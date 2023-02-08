@@ -12,9 +12,31 @@ import {
 import { Connector as ConnectorType } from '../types/types';
 
 /**
+ * Connector object properties
+ *
+ * @typedef {Object} ConnectorProps
+ * @property {string} key - A key to uniquely identify this connector.
+ * @property {string} name - A short name to uniquely identify this connector app. Name for web3 connector must include blockchain name, for example: "Moloch on Ethereum".
+ * @property {string} version - version identifier for your code.
+ * @property {string} platformVersion - version identifier for the Grindery Nexus execution environment.
+ * @property {string} type - Connector type. One of `web2`, `web3`.
+ * @property {string} [description] - Short user-friendly connector description.
+ * @property {Object[]} [triggers] - All the triggers for your connector app.
+ * @property {Object[]} [actions] - All the actions for your connector app.
+ * @property {Object[]} [recipes]
+ * @property {Object} [authentication] - Choose what scheme your API uses for authentication.
+ * @property {string} [icon] - Base64 encoded image string.
+ * @property {string} [pricing] - URL of the pricing page.
+ * @property {string} [user] - Creator's user ID.
+ * @property {string} [workspace] - Creator's workspace ID.
+ * @property {string} [access] - Who can use this connector. One of `Public`, `Private`, `Workspace`.
+ */
+
+/**
  * Connector class
  *
  * @description A class to interact with connectors
+ * @memberof GrinderyClient
  */
 class Connector {
   /**
@@ -45,16 +67,21 @@ class Connector {
    * Gets single connector
    *
    * @since 0.5.0
-   * @param {string} driverKey - Connector key
-   * @param {string} environment - Set environment for getting driver. Optional.
-   * @param {boolean} enrich - If driver should be enriched with automated fields. Default is `true`.
-   * @returns {Promise} Promise object with a CDS object or `null` if driver not found
+   * @param {Object} payload
+   * @param {string} payload.driverKey - Connector key
+   * @param {string} [payload.environment] - Set environment for getting driver. Optional.
+   * @param {boolean} [payload.enrich=true] - If driver should be enriched with automated fields. Default is `true`.
+   * @returns {Promise<ConnectorProps|null>} Promise object with a Connector object or `null` if driver not found. See {@link ConnectorProps} definition.
    */
-  async get(
-    driverKey: string,
-    environment?: string,
-    enrich: boolean = true
-  ): Promise<any> {
+  async get({
+    driverKey,
+    environment,
+    enrich = true,
+  }: {
+    driverKey: string;
+    environment?: string;
+    enrich?: boolean;
+  }): Promise<any> {
     if (!driverKey) {
       throw new Error('Driver key required');
     }
@@ -86,10 +113,11 @@ class Connector {
    * Gets list of connectors
    *
    * @since 0.5.0
-   * @param {string} environment - Set environment for getting connectors. Optional.
-   * @returns {Promise} Promise object with an array of connectors
+   * @param {Object} [payload]
+   * @param {string} [payload.environment] - Set environment for getting connectors. Optional.
+   * @returns {Promise<ConnectorProps[]>} Promise object with an array of connectors. See {@link ConnectorProps} definition.
    */
-  async list(environment?: string): Promise<any> {
+  async list({ environment }: { environment?: string }): Promise<any> {
     let driversIndexURL = `${DRIVERS_URL}/_index.json`;
 
     if (environment && environment === 'staging') {
@@ -128,16 +156,21 @@ class Connector {
    * Adds connector secrets (for admin only). Authentication required.
    *
    * @since 0.7.0
-   * @param {string} connectorId - Credential key
-   * @param {object} secrets - Object with key-value pairs
-   * @param {string} environment - Environment (`production` or `staging`)
+   * @param {Object} payload
+   * @param {string} payload.connectorId - Credential key
+   * @param {object} payload.secrets - Object with key-value pairs
+   * @param {string} payload.environment - Environment (`production` or `staging`)
    * @returns {Promise} Promise
    */
-  async putSecrets(
-    connectorId: string,
-    secrets: { [key: string]: unknown },
-    environment: string
-  ): Promise<any> {
+  async putSecrets({
+    connectorId,
+    secrets,
+    environment,
+  }: {
+    connectorId: string;
+    secrets: { [key: string]: unknown };
+    environment: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -160,16 +193,21 @@ class Connector {
   /**
    * Tests driver action. Authentication required.
    *
-   * @param {Operation} step - Workflow step
-   * @param input - Sample user input
-   * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
-   * @returns {Promise} Promise object with action execution payload
+   * @param {Object} payload
+   * @param {Operation} payload.step - Workflow step
+   * @param {Object} payload.input - Sample user input
+   * @param {string} [payload.environment=production] - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @returns {Promise<Object>} Promise object with action execution payload
    */
-  async testAction(
-    step: Operation,
-    input: unknown,
-    environment?: string
-  ): Promise<any> {
+  async testAction({
+    step,
+    input,
+    environment,
+  }: {
+    step: Operation;
+    input: unknown;
+    environment?: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -194,16 +232,21 @@ class Connector {
    * Run a single action. Authentication required.
    *
    * @since 0.9.0
-   * @param {Operation} step - Workflow step
-   * @param input - Sample user input
-   * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
-   * @returns {Promise} Promise object with action execution payload
+   * @param {Object} payload
+   * @param {Operation} payload.step - Workflow step
+   * @param {Object} payload.input - Sample user input
+   * @param {string} [payload.environment] - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @returns {Promise<Object>} Promise object with action execution payload
    */
-  async runAction(
-    step: Operation,
-    input: unknown,
-    environment?: string
-  ): Promise<any> {
+  async runAction({
+    step,
+    input,
+    environment,
+  }: {
+    step: Operation;
+    input: unknown;
+    environment?: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -227,18 +270,24 @@ class Connector {
   /**
    * Sends request to an operation's `inputFieldProviderUrl`. Authentication required.
    *
-   * @param {string} connectorKey - Connector key
-   * @param {string} operationKey - Trigger or Action operation key
-   * @param {object} body - JSON RPC request object with user input
-   * @param {string} environment - Specifiy execution environment. Use `staging` for staging environment. Optional.
-   * @returns {Promise} Promise object with operation's field provider response
+   * @param {Object} payload
+   * @param {string} payload.connectorKey - Connector key
+   * @param {string} payload.operationKey - Trigger or Action operation key
+   * @param {object} payload.body - JSON RPC request object with user input
+   * @param {string} [payload.environment] - Specifiy execution environment. Use `staging` for staging environment. Optional.
+   * @returns {Promise<Object>} Promise object with operation's field provider response
    */
-  async callInputProvider(
-    connectorKey: string,
-    operationKey: string,
-    body: any,
-    environment?: string
-  ): Promise<any> {
+  async callInputProvider({
+    connectorKey,
+    operationKey,
+    body,
+    environment,
+  }: {
+    connectorKey: string;
+    operationKey: string;
+    body: any;
+    environment?: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -282,18 +331,24 @@ class Connector {
   /**
    * Sends webhook to a trigger
    *
-   * @param {string} connectorKey - Connector key
-   * @param {string} operationKey - Trigger operation key
-   * @param {object} body - JSON body
-   * @param {string} environment - Specifiy execution environment. Use `staging` for staging environment. Optional.
+   * @param {Object} payload
+   * @param {string} payload.connectorKey - Connector key
+   * @param {string} payload.operationKey - Trigger operation key
+   * @param {object} payload.body - JSON body
+   * @param {string} [payload.environment] - Specifiy execution environment. Use `staging` for staging environment. Optional.
    * @returns {Promise} Promise object with JSON RPC 2.0 response
    */
-  async callWebhook(
-    connectorKey: string,
-    operationKey: string,
-    body: any,
-    environment?: string
-  ): Promise<any> {
+  async callWebhook({
+    connectorKey,
+    operationKey,
+    body,
+    environment,
+  }: {
+    connectorKey: string;
+    operationKey: string;
+    body: any;
+    environment?: string;
+  }): Promise<any> {
     if (!connectorKey) {
       throw new Error('Connector key is required');
     }

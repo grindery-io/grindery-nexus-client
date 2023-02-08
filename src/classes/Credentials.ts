@@ -4,6 +4,7 @@ import { sendEngineRequest } from '../helpers/utils';
  * Auth class
  *
  * @description A class to interact with authentication credentials
+ * @memberof GrinderyClient
  */
 class Credentials {
   /**
