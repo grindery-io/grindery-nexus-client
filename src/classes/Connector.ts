@@ -117,7 +117,11 @@ class Connector {
    * @param {string} [payload.environment] - Set environment for getting connectors. Optional.
    * @returns {Promise<ConnectorProps[]>} Promise object with an array of connectors. See {@link ConnectorProps} definition.
    */
-  async list({ environment }: { environment?: string }): Promise<any> {
+  async list({
+    environment,
+  }: {
+    environment?: string;
+  }): Promise<ConnectorType[]> {
     let driversIndexURL = `${DRIVERS_URL}/_index.json`;
 
     if (environment && environment === 'staging') {

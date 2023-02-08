@@ -222,3 +222,10 @@ export const mockedConnector = {
     },
   ],
 };
+
+export const mockedChain = {
+  value: 'eip155:1',
+  label: 'Ethereum',
+  icon: '',
+  token: 'ETH',
+};

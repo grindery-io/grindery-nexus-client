@@ -1,4 +1,5 @@
 import { listChains } from '../helpers/utils';
+import { Blockchain } from '../types/types';
 
 /**
  * Blockchain object properties
@@ -27,13 +28,13 @@ class Chain {
    * @param {string} [payload.environment] - Set environment for getting chains list. Optional.
    * @returns {Promise<BlockchainProps[]>} Promise object with an array of blockchains. See {@link BlockchainProps} definition.
    */
-  async listChains({
+  async list({
     type = 'all',
     environment,
   }: {
-    type: 'all' | 'evm' | 'non-evm';
+    type?: 'all' | 'evm' | 'non-evm';
     environment?: string;
-  }): Promise<any> {
+  }): Promise<Blockchain[]> {
     return await listChains(type, environment);
   }
 }

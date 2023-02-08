@@ -200,7 +200,7 @@ export const enrichDriver = (
   };
 };
 
-export const processDriver = (connector: Connector) => {
+export const processDriver = (connector: Connector): Connector => {
   return {
     ...connector,
     triggers:
