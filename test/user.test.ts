@@ -86,7 +86,7 @@ describe('user.delete method', () => {
 describe('user.isAllowed method', () => {
   it('requires authentication', async () => {
     const client = new GrinderyClient();
-    await expect(client.user.isAllowed()).rejects.toMatchObject({
+    await expect(client.user.isAllowed({})).rejects.toMatchObject({
       message: 'Authentication required',
     });
   });
@@ -98,21 +98,25 @@ describe('user.isAllowed method', () => {
         result: true,
       },
     });
-    await expect(client.user.isAllowed()).resolves.toEqual(true);
+    await expect(client.user.isAllowed({})).resolves.toEqual(true);
   });
 });
 
 describe('user.requestEarlyAccess method', () => {
   it('requires authentication', async () => {
     const client = new GrinderyClient();
-    await expect(client.user.requestEarlyAccess('')).rejects.toMatchObject({
+    await expect(
+      client.user.requestEarlyAccess({ email: '' })
+    ).rejects.toMatchObject({
       message: 'Authentication required',
     });
   });
 
   it('requires email', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.user.requestEarlyAccess('')).rejects.toMatchObject({
+    await expect(
+      client.user.requestEarlyAccess({ email: '' })
+    ).rejects.toMatchObject({
       message: 'Email is required',
     });
   });
@@ -120,7 +124,7 @@ describe('user.requestEarlyAccess method', () => {
   it('requires email to be valid', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.user.requestEarlyAccess('invalid@email')
+      client.user.requestEarlyAccess({ email: 'invalid@email' })
     ).rejects.toMatchObject({
       message: 'Invalid email',
     });
@@ -133,23 +137,27 @@ describe('user.requestEarlyAccess method', () => {
         result: true,
       },
     });
-    await expect(client.user.requestEarlyAccess(mockedEmail)).resolves.toEqual(
-      true
-    );
+    await expect(
+      client.user.requestEarlyAccess({ email: mockedEmail })
+    ).resolves.toEqual(true);
   });
 });
 
 describe('user.saveWalletAddress method', () => {
   it('requires authentication', async () => {
     const client = new GrinderyClient();
-    await expect(client.user.saveWalletAddress('')).rejects.toMatchObject({
+    await expect(
+      client.user.saveWalletAddress({ walletAddress: '' })
+    ).rejects.toMatchObject({
       message: 'Authentication required',
     });
   });
 
   it('requires wallet address', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.user.saveWalletAddress('')).rejects.toMatchObject({
+    await expect(
+      client.user.saveWalletAddress({ walletAddress: '' })
+    ).rejects.toMatchObject({
       message: 'Wallet address is required',
     });
   });
@@ -157,7 +165,10 @@ describe('user.saveWalletAddress method', () => {
   it('requires email to be valid', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.user.saveWalletAddress(mockedWalletAddress, 'invalid@email')
+      client.user.saveWalletAddress({
+        walletAddress: mockedWalletAddress,
+        email: 'invalid@email',
+      })
     ).rejects.toMatchObject({
       message: 'Invalid email',
     });
@@ -171,7 +182,7 @@ describe('user.saveWalletAddress method', () => {
       },
     });
     await expect(
-      client.user.saveWalletAddress(mockedWalletAddress)
+      client.user.saveWalletAddress({ walletAddress: mockedWalletAddress })
     ).resolves.toEqual(true);
   });
 
@@ -183,7 +194,10 @@ describe('user.saveWalletAddress method', () => {
       },
     });
     await expect(
-      client.user.saveWalletAddress(mockedWalletAddress, mockedEmail)
+      client.user.saveWalletAddress({
+        walletAddress: mockedWalletAddress,
+        email: mockedEmail,
+      })
     ).resolves.toEqual(true);
   });
 });
@@ -191,8 +205,17 @@ describe('user.saveWalletAddress method', () => {
 describe('user.updateEmail method', () => {
   it('requires authentication', async () => {
     const client = new GrinderyClient();
-    await expect(client.user.updateEmail(mockedEmail)).rejects.toMatchObject({
+    await expect(
+      client.user.updateEmail({ email: mockedEmail })
+    ).rejects.toMatchObject({
       message: 'Authentication required',
+    });
+  });
+
+  it('requires new email', async () => {
+    const client = new GrinderyClient(mockedToken);
+    await expect(client.user.updateEmail({ email: '' })).rejects.toMatchObject({
+      message: 'Email is required',
     });
   });
 
@@ -201,7 +224,9 @@ describe('user.updateEmail method', () => {
     mockedAxios.post.mockResolvedValue({
       data: { result: true },
     });
-    await expect(client.user.updateEmail(mockedEmail)).resolves.toBeTruthy();
+    await expect(
+      client.user.updateEmail({ email: mockedEmail })
+    ).resolves.toBeTruthy();
   });
 });
 
@@ -210,7 +235,7 @@ describe('user.saveNotificationsState', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.user.saveNotificationsState()
+      client.user.saveNotificationsState({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -218,7 +243,9 @@ describe('user.saveNotificationsState', () => {
 
   it('requires state string', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.user.saveNotificationsState('')).rejects.toMatchObject({
+    await expect(
+      client.user.saveNotificationsState({ state: '' })
+    ).rejects.toMatchObject({
       message: 'Notifications state is required',
     });
   });
@@ -231,7 +258,22 @@ describe('user.saveNotificationsState', () => {
       },
     });
     await expect(
-      client.user.saveNotificationsState('Allowed')
+      client.user.saveNotificationsState({ state: 'Allowed' })
+    ).resolves.toEqual(true);
+  });
+
+  it('returns true on success request with notification token', async () => {
+    const client = new GrinderyClient(mockedToken);
+    mockedAxios.post.mockResolvedValue({
+      data: {
+        result: true,
+      },
+    });
+    await expect(
+      client.user.saveNotificationsState({
+        state: 'Allowed',
+        notificationToken: 'token',
+      })
     ).resolves.toEqual(true);
   });
 });

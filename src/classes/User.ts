@@ -76,9 +76,9 @@ class User {
    * Checks if user has email. Authentication required.
    *
    * @since 0.9.10
-   * @returns {Promise} Promise object with `true` if user has email and `false` if not
+   * @returns {Promise<boolean>} Promise object with `true` if user has email and `false` if not
    */
-  async hasEmail(): Promise<any> {
+  async hasEmail(): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -89,9 +89,9 @@ class User {
    * Gets user email address
    *
    * @since 0.9.12
-   * @returns {Promise} Promise object with user email if exists, or `null` if not.
+   * @returns {Promise<string|null>} Promise object with user email if exists, or `null` if not.
    */
-  async getEmail(): Promise<any> {
+  async getEmail(): Promise<string | null> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -102,9 +102,9 @@ class User {
    * Deletes user account
    *
    * @since 0.9.11
-   * @returns {Promise} Promise object with `true` if user account was deleted
+   * @returns {Promise<boolean>} Promise object with `true` if user account was deleted
    */
-  async delete(): Promise<any> {
+  async delete(): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -114,10 +114,15 @@ class User {
   /**
    * Checks if user is approved for early access. Authentication required.
    *
-   * @param {string} app - Application for which the access is checked. One of: `flow`, `cds`, `gateway` or `ping`.
-   * @returns {Promise} Promise object with `true` if user is allowed and `false` if not
+   * @param {Object} payload
+   * @param {string} [payload.app] - Application for which the access is checked. One of: `flow`, `cds`, `gateway` or `ping`. Optional.
+   * @returns {Promise<boolean>} Promise object with `true` if user is allowed and `false` if not
    */
-  async isAllowed(app?: 'flow' | 'gateway' | 'cds' | 'ping'): Promise<any> {
+  async isAllowed({
+    app,
+  }: {
+    app?: 'flow' | 'gateway' | 'cds' | 'ping';
+  }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -131,16 +136,21 @@ class User {
   /**
    * Requests early access to Grindery apps. Authentication required.
    *
-   * @param {string} email - User email
-   * @param {string} source - The source of request (optional)
-   * @param {string} app - The App to which access is requested (optional)
-   * @returns {Promise} Promise object with `true` on success
+   * @param {Object} payload
+   * @param {string} payload.email - User email
+   * @param {string} [payload.source] - The source of request (optional)
+   * @param {string} [payload.app] - The App to which access is requested (optional)
+   * @returns {Promise<boolean>} Promise object with `true` on success
    */
-  async requestEarlyAccess(
-    email: string,
-    source?: string,
-    app?: string
-  ): Promise<any> {
+  async requestEarlyAccess({
+    email,
+    source,
+    app,
+  }: {
+    email: string;
+    source?: string;
+    app?: string;
+  }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -164,11 +174,18 @@ class User {
   /**
    * Saves user wallet address in CRM. Authentication required.
    *
-   * @param {string} walletAddress - User wallet address
-   * @param {string} [email] - User email, optional
-   * @returns {Promise} Promise object with `true` on success
+   * @param {Object} payload
+   * @param {string} payload.walletAddress - User wallet address
+   * @param {string} [payload.email] - User email, optional
+   * @returns {Promise<boolean>} Promise object with `true` on success
    */
-  async saveWalletAddress(walletAddress: string, email?: string): Promise<any> {
+  async saveWalletAddress({
+    walletAddress,
+    email,
+  }: {
+    walletAddress: string;
+    email?: string;
+  }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -192,9 +209,11 @@ class User {
    * Updates user email address
    *
    * @since 0.9.11
-   * @returns {Promise} Promise object with `true` if user email was updated or `false` if not
+   * @param {Object} payload
+   * @param {string} payload.email - User email address
+   * @returns {Promise<boolean>} Promise object with `true` if user email was updated or `false` if not
    */
-  async updateEmail(email: string): Promise<any> {
+  async updateEmail({ email }: { email: string }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -207,14 +226,18 @@ class User {
   /**
    * Saves user notifications state in CRM. Authentication required.
    *
-   * @param {string} state - User notifications state
-   * @param {string} notificationToken - User notification token (optional)
-   * @returns {Promise} Promise object with `true` on success
+   * @param {Object} payload
+   * @param {string} payload.state - User notifications state
+   * @param {string} [payload.notificationToken] - User notification token (optional)
+   * @returns {Promise<boolean>} Promise object with `true` on success
    */
-  async saveNotificationsState(
-    state: string,
-    notificationToken?: string
-  ): Promise<any> {
+  async saveNotificationsState({
+    state,
+    notificationToken,
+  }: {
+    state: string;
+    notificationToken?: string;
+  }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
     }

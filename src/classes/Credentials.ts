@@ -22,11 +22,18 @@ class Credentials {
    * Gets list of user's saved authentication credentials. Authentication required.
    *
    * @since 0.7.0
-   * @param {string} connectorId - Connector key
-   * @param {string} environment - Environment (`production` or `staging`)
+   * @param {Object} payload
+   * @param {string} payload.connectorId - Connector key
+   * @param {string} payload.environment - Environment (`production` or `staging`)
    * @returns {Promise} Promise object with a list of saved credentials
    */
-  async list(connectorId: string, environment: string): Promise<any> {
+  async list({
+    connectorId,
+    environment,
+  }: {
+    connectorId: string;
+    environment: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -47,11 +54,18 @@ class Credentials {
    * Updates saved authentication credential. Authentication required.
    *
    * @since 0.7.0
-   * @param {string} key - Credential key
-   * @param {string} displayName - New display name
+   * @param {Object} payload
+   * @param {string} payload.key - Credential key
+   * @param {string} payload.displayName - New display name
    * @returns {Promise} Promise object with updated credential
    */
-  async update(key: string, displayName: string): Promise<any> {
+  async update({
+    key,
+    displayName,
+  }: {
+    key: string;
+    displayName: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }

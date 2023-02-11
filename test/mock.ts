@@ -229,3 +229,9 @@ export const mockedChain = {
   icon: '',
   token: 'ETH',
 };
+
+export const mockedCredentials = {
+  key: '1',
+  name: 'Credential 1',
+  token: 'token',
+};
