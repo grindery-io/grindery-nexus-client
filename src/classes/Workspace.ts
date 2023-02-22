@@ -35,15 +35,20 @@ class Workspace {
    * Creates new workspace
    *
    * @since 0.6.0
-   * @param {object} workspace - Workspace properties
+   * @param {Object} payload
+   * @param {object} payload.workspace - Workspace properties
    * @returns {Promise} Promise object with a created workspace key
    */
-  async create(workspace: {
-    title: string;
-    iconUrl?: string;
-    about?: string;
-    admins?: string[];
-    users?: string[];
+  async create({
+    workspace,
+  }: {
+    workspace: {
+      title: string;
+      iconUrl?: string;
+      about?: string;
+      admins?: string[];
+      users?: string[];
+    };
   }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -58,16 +63,21 @@ class Workspace {
    * Updates a workspace
    *
    * @since 0.6.0
-   * @param {object} workspace - Workspace properties
+   * @param {Object} payload
+   * @param {object} payload.workspace - Workspace properties
    * @returns {Promise} Promise object with an updated workspace
    */
-  async update(workspace: {
-    key: string;
-    title?: string;
-    iconUrl?: string;
-    about?: string;
-    admins?: string[];
-    users?: string[];
+  async update({
+    workspace,
+  }: {
+    workspace: {
+      key: string;
+      title?: string;
+      iconUrl?: string;
+      about?: string;
+      admins?: string[];
+      users?: string[];
+    };
   }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -88,10 +98,11 @@ class Workspace {
    * Removes user from a workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
    * @returns {Promise} Promise object with a `left` property equals `true` on success
    */
-  async leave(key: string): Promise<any> {
+  async leave({ key }: { key: string }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -105,10 +116,11 @@ class Workspace {
    * Deletes workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
    * @returns {Promise} Promise object with `true` on success
    */
-  async delete(key: string): Promise<any> {
+  async delete({ key }: { key: string }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -122,11 +134,18 @@ class Workspace {
    * Adds user (member) to a workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
-   * @param {string} userAccountId - User account ID
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
+   * @param {string} payload.userAccountId - User account ID
    * @returns {Promise} Promise object with updated workspace properties
    */
-  async addUser(key: string, userAccountId: string): Promise<any> {
+  async addUser({
+    key,
+    userAccountId,
+  }: {
+    key: string;
+    userAccountId: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -147,11 +166,18 @@ class Workspace {
    * Removes user (member) from a workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
-   * @param {string} userAccountId - User account ID
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
+   * @param {string} payload.userAccountId - User account ID
    * @returns {Promise} Promise object with updated workspace properties
    */
-  async removeUser(key: string, userAccountId: string): Promise<any> {
+  async removeUser({
+    key,
+    userAccountId,
+  }: {
+    key: string;
+    userAccountId: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -172,11 +198,18 @@ class Workspace {
    * Adds admin to a workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
-   * @param {string} userAccountId - User account ID
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
+   * @param {string} payload.userAccountId - User account ID
    * @returns {Promise} Promise object with updated workspace properties
    */
-  async addAdmin(key: string, userAccountId: string): Promise<any> {
+  async addAdmin({
+    key,
+    userAccountId,
+  }: {
+    key: string;
+    userAccountId: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -197,11 +230,18 @@ class Workspace {
    * Removes admin from a workspace
    *
    * @since 0.6.0
-   * @param {string} key - Workspace key
-   * @param {string} userAccountId - User account ID
+   * @param {Object} payload
+   * @param {string} payload.key - Workspace key
+   * @param {string} payload.userAccountId - User account ID
    * @returns {Promise} Promise object with updated workspace properties
    */
-  async removeAdmin(key: string, userAccountId: string): Promise<any> {
+  async removeAdmin({
+    key,
+    userAccountId,
+  }: {
+    key: string;
+    userAccountId: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }

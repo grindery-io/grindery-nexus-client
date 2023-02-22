@@ -22,11 +22,18 @@ class Workflow {
   /**
    * Creates new workflow. Authentication required.
    *
-   * @param {Workflow} workflow - New workflow object
-   * @param {string} workspaceKey - Workspace key. Optional
+   * @param {Object} payload
+   * @param {Workflow} payload.workflow - New workflow object
+   * @param {string} [payload.workspaceKey] - Workspace key. Optional
    * @returns {Promise} Promise object with new workflow key
    */
-  async create(workflow: WorkflowType, workspaceKey?: string): Promise<any> {
+  async create({
+    workflow,
+    workspaceKey,
+  }: {
+    workflow: WorkflowType;
+    workspaceKey?: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -49,10 +56,11 @@ class Workflow {
   /**
    * Lists user's workflows. Authentication required.
    *
-   * @param {string} workspaceKey - Workspace key. Optional.
+   * @param {Object} payload
+   * @param {string} [payload.workspaceKey] - Workspace key. Optional.
    * @returns {Promise} Promise object with an array of user's workflows
    */
-  async list(workspaceKey?: string): Promise<any> {
+  async list({ workspaceKey }: { workspaceKey?: string }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -68,11 +76,18 @@ class Workflow {
   /**
    * Updates a single workflow. Authentication required.
    *
-   * @param {string} key - Workflow key
-   * @param {Workflow} workflow - Updated workflow object
+   * @param {Object} payload
+   * @param {string} payload.key - Workflow key
+   * @param {Workflow} payload.workflow - Updated workflow object
    * @returns {Promise} Promise object with workflow key
    */
-  async update(key: string, workflow: WorkflowType): Promise<any> {
+  async update({
+    key,
+    workflow,
+  }: {
+    key: string;
+    workflow: WorkflowType;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -95,10 +110,11 @@ class Workflow {
   /**
    * Deletes user's workflow by key. Authentication required.
    *
-   * @param {string} key - Workflow key
+   * @param {Object} payload
+   * @param {string} payload.key - Workflow key
    * @returns {Promise} Promise object with `deleted` property `true` or `false`
    */
-  async delete(key: string): Promise<{ deleted: boolean }> {
+  async delete({ key }: { key: string }): Promise<{ deleted: boolean }> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -117,18 +133,24 @@ class Workflow {
   /**
    * Gets workflow executions. Authentication required.
    *
-   * @param {string} workflowKey - Workflow key
-   * @param {number} since - Since parameter used for pagination. Optional.
-   * @param {number} until - Until parameter used for pagination. Optional.
-   * @param {number} limit - Limit parameter used for pagination. Optional.
+   * @param {Object} payload
+   * @param {string} payload.workflowKey - Workflow key
+   * @param {number} [payload.since] - Since parameter used for pagination. Optional.
+   * @param {number} [payload.until] - Until parameter used for pagination. Optional.
+   * @param {number} [payload.limit] - Limit parameter used for pagination. Optional.
    * @returns {Promise} Promise object with an array of workflow executions
    */
-  async getExecutions(
-    workflowKey: string,
-    since?: number,
-    until?: number,
-    limit?: number
-  ): Promise<any> {
+  async getExecutions({
+    workflowKey,
+    since,
+    until,
+    limit,
+  }: {
+    workflowKey: string;
+    since?: number;
+    until?: number;
+    limit?: number;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -150,10 +172,15 @@ class Workflow {
   /**
    * Gets workflow execution log. Authentication required.
    *
-   * @param {string} executionId - Workflow execution ID
+   * @param {Object} payload
+   * @param {string} payload.executionId - Workflow execution ID
    * @returns {Promise} Promise object with workflow execution log
    */
-  async getExecutionLog(executionId: string): Promise<any> {
+  async getExecutionLog({
+    executionId,
+  }: {
+    executionId: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }
@@ -173,14 +200,19 @@ class Workflow {
    * Moves workflow to a workspace
    *
    * @since 0.6.0
-   * @param {string} workflowKey - Workflow key
-   * @param {string} workspaceKey - The destination workspace key
+   *
+   * @param {Object} payload
+   * @param {string} payload.workflowKey - Workflow key
+   * @param {string} payload.workspaceKey - The destination workspace key
    * @returns {Promise} Promise object with `true` on success
    */
-  async moveToWorkspace(
-    workflowKey: string,
-    workspaceKey: string
-  ): Promise<any> {
+  async moveToWorkspace({
+    workflowKey,
+    workspaceKey,
+  }: {
+    workflowKey: string;
+    workspaceKey: string;
+  }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
     }

@@ -4,6 +4,7 @@ import { CustomJwtPayload, Operation } from '../types/types';
 import { DRIVERS_STAGING_URL, DRIVERS_URL } from '../helpers/constants';
 import {
   enrichDriver,
+  filterConnectors,
   listChains,
   processDriver,
   sendEngineHTTPRequest,
@@ -114,12 +115,15 @@ class Connector {
    *
    * @since 0.5.0
    * @param {Object} [payload]
+   * @param {string} [payload.access] - Filter connectors by access. One of `public`, `beta` or `private`. Optional. By default returns public, beta and user private connectors.
    * @param {string} [payload.environment] - Set environment for getting connectors. Optional.
    * @returns {Promise<ConnectorProps[]>} Promise object with an array of connectors. See {@link ConnectorProps} definition.
    */
   async list({
+    access,
     environment,
   }: {
+    access?: 'public' | 'beta' | 'private';
     environment?: string;
   }): Promise<ConnectorType[]> {
     let driversIndexURL = `${DRIVERS_URL}/_index.json`;
@@ -137,19 +141,14 @@ class Connector {
             ...res.data[key],
           })
         )
-        .filter(
-          (driver: ConnectorType) =>
-            driver &&
-            (!driver.access ||
-              driver.access?.toLowerCase() === 'public' ||
-              (this.userId &&
-                driver.access?.toLowerCase() === 'private' &&
-                driver.user?.toLowerCase() === this.userId.toLowerCase()) ||
-              (this.workspaceId &&
-                driver.access?.toLowerCase() === 'workspace' &&
-                driver.workspace?.toLowerCase() ===
-                  this.workspaceId.toLowerCase()))
-        );
+        .filter((connector: ConnectorType) => {
+          return filterConnectors(
+            connector,
+            access,
+            this.userId || '',
+            this.workspaceId || ''
+          );
+        });
       return drivers;
     } else {
       return [];

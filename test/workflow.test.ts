@@ -15,7 +15,7 @@ describe('workflow.create method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.create()
+      client.workflow.create({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -25,7 +25,7 @@ describe('workflow.create method', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.workflow.create()
+      client.workflow.create({})
     ).rejects.toMatchObject({
       message: 'Workflow object is required',
     });
@@ -34,7 +34,7 @@ describe('workflow.create method', () => {
   it('requires workflow to have creator', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workflow.create({ ...mockedWorkflow, creator: '' })
+      client.workflow.create({ workflow: { ...mockedWorkflow, creator: '' } })
     ).rejects.toMatchObject({
       message: 'Workflow creator is required',
     });
@@ -45,7 +45,9 @@ describe('workflow.create method', () => {
     mockedAxios.post.mockResolvedValue({
       data: { result: { key: mockedWorkflowKey } },
     });
-    await expect(client.workflow.create(mockedWorkflow)).resolves.toEqual({
+    await expect(
+      client.workflow.create({ workflow: mockedWorkflow })
+    ).resolves.toEqual({
       key: mockedWorkflowKey,
     });
   });
@@ -56,7 +58,7 @@ describe('workflow.list method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.list()
+      client.workflow.list({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -65,7 +67,7 @@ describe('workflow.list method', () => {
   it('returns array on success', async () => {
     const client = new GrinderyClient(mockedToken);
     mockedAxios.post.mockResolvedValue({ data: { result: [] } });
-    await expect(client.workflow.list()).resolves.toEqual([]);
+    await expect(client.workflow.list({})).resolves.toEqual([]);
   });
 });
 
@@ -74,7 +76,7 @@ describe('workflow.update method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.update()
+      client.workflow.update({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -83,7 +85,7 @@ describe('workflow.update method', () => {
   it('requires workflow key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workflow.update('', mockedWorkflow)
+      client.workflow.update({ key: '', workflow: mockedWorkflow })
     ).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
@@ -92,18 +94,21 @@ describe('workflow.update method', () => {
   it('requires workflow to have creator', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workflow.update(mockedWorkflowKey, {
-        title: '',
-        trigger: {
-          type: 'trigger',
-          connector: '',
-          operation: '',
-          input: {
-            field1: '1',
+      client.workflow.update({
+        key: mockedWorkflowKey,
+        workflow: {
+          title: '',
+          trigger: {
+            type: 'trigger',
+            connector: '',
+            operation: '',
+            input: {
+              field1: '1',
+            },
           },
+          actions: [],
+          creator: '',
         },
-        actions: [],
-        creator: '',
       })
     ).rejects.toMatchObject({
       message: 'Workflow creator is required',
@@ -116,7 +121,10 @@ describe('workflow.update method', () => {
       data: { result: { key: mockedWorkflowKey } },
     });
     await expect(
-      client.workflow.update(mockedWorkflowKey, mockedWorkflow)
+      client.workflow.update({
+        key: mockedWorkflowKey,
+        workflow: mockedWorkflow,
+      })
     ).resolves.toEqual({ key: mockedWorkflowKey });
   });
 });
@@ -126,7 +134,7 @@ describe('workflow.delete', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.delete()
+      client.workflow.delete({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -134,7 +142,7 @@ describe('workflow.delete', () => {
 
   it('requires workflow key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workflow.delete('')).rejects.toMatchObject({
+    await expect(client.workflow.delete({ key: '' })).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
   });
@@ -146,7 +154,9 @@ describe('workflow.delete', () => {
         result: { deleted: true },
       },
     });
-    await expect(client.workflow.delete(mockedWorkflowKey)).resolves.toEqual({
+    await expect(
+      client.workflow.delete({ key: mockedWorkflowKey })
+    ).resolves.toEqual({
       deleted: true,
     });
   });
@@ -158,7 +168,9 @@ describe('workflow.delete', () => {
         result: { deleted: false },
       },
     });
-    await expect(client.workflow.delete(mockedWorkflowKey)).resolves.toEqual({
+    await expect(
+      client.workflow.delete({ key: mockedWorkflowKey })
+    ).resolves.toEqual({
       deleted: false,
     });
   });
@@ -169,7 +181,7 @@ describe('workflow.getExecutions method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.getExecutions()
+      client.workflow.getExecutions({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -177,7 +189,9 @@ describe('workflow.getExecutions method', () => {
 
   it('requires workflow key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workflow.getExecutions('')).rejects.toMatchObject({
+    await expect(
+      client.workflow.getExecutions({ workflowKey: '' })
+    ).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
   });
@@ -194,7 +208,7 @@ describe('workflow.getExecutions method', () => {
       },
     });
     await expect(
-      client.workflow.getExecutions(mockedWorkflowKey)
+      client.workflow.getExecutions({ workflowKey: mockedWorkflowKey })
     ).resolves.toEqual([
       {
         executionId: mockedWorkflowExecutionId,
@@ -208,7 +222,7 @@ describe('workflow.getExecutionLog method', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.getExecutionLog()
+      client.workflow.getExecutionLog({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -216,7 +230,9 @@ describe('workflow.getExecutionLog method', () => {
 
   it('requires workflow execution ID', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workflow.getExecutionLog('')).rejects.toMatchObject({
+    await expect(
+      client.workflow.getExecutionLog({ executionId: '' })
+    ).rejects.toMatchObject({
       message: 'Workflow execution ID is required',
     });
   });
@@ -233,7 +249,9 @@ describe('workflow.getExecutionLog method', () => {
       },
     });
     await expect(
-      client.workflow.getExecutionLog(mockedWorkflowExecutionId)
+      client.workflow.getExecutionLog({
+        executionId: mockedWorkflowExecutionId,
+      })
     ).resolves.toEqual([
       {
         executionId: mockedWorkflowExecutionId,
@@ -247,7 +265,7 @@ describe('workflow.moveToWorkspace', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workflow.moveToWorkspace()
+      client.workflow.moveToWorkspace({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -256,7 +274,7 @@ describe('workflow.moveToWorkspace', () => {
   it('requires workflow key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workflow.moveToWorkspace('', '2')
+      client.workflow.moveToWorkspace({ workflowKey: '', workspaceKey: '2' })
     ).rejects.toMatchObject({
       message: 'Workflow key is required',
     });
@@ -269,8 +287,8 @@ describe('workflow.moveToWorkspace', () => {
         result: true,
       },
     });
-    await expect(client.workflow.moveToWorkspace('1', '2')).resolves.toEqual(
-      true
-    );
+    await expect(
+      client.workflow.moveToWorkspace({ workflowKey: '1', workspaceKey: '2' })
+    ).resolves.toEqual(true);
   });
 });

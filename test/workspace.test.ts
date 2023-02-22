@@ -42,7 +42,7 @@ describe('workspace.create', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.create()
+      client.workspace.create({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -50,7 +50,9 @@ describe('workspace.create', () => {
 
   it('requires workspace title', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.create({ title: '' })).rejects.toMatchObject({
+    await expect(
+      client.workspace.create({ workspace: { title: '' } })
+    ).rejects.toMatchObject({
       message: 'Workspace title is required',
     });
   });
@@ -64,7 +66,9 @@ describe('workspace.create', () => {
         },
       },
     });
-    await expect(client.workspace.create({ title: 'test' })).resolves.toEqual({
+    await expect(
+      client.workspace.create({ workspace: { title: 'test' } })
+    ).resolves.toEqual({
       key: '1',
     });
   });
@@ -75,7 +79,7 @@ describe('workspace.update', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.update()
+      client.workspace.update({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -83,7 +87,9 @@ describe('workspace.update', () => {
 
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.update({ key: '' })).rejects.toMatchObject({
+    await expect(
+      client.workspace.update({ workspace: { key: '' } })
+    ).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
   });
@@ -92,7 +98,7 @@ describe('workspace.update', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.workspace.update({ key: '1', admins: 'admin' })
+      client.workspace.update({ workspace: { key: '1', admins: 'admin' } })
     ).rejects.toMatchObject({
       message: 'Admins must be an array',
     });
@@ -102,7 +108,7 @@ describe('workspace.update', () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
       // @ts-ignore
-      client.workspace.update({ key: '1', users: 'user' })
+      client.workspace.update({ workspace: { key: '1', users: 'user' } })
     ).rejects.toMatchObject({
       message: 'Users must be an array',
     });
@@ -119,7 +125,9 @@ describe('workspace.update', () => {
       },
     });
     await expect(
-      client.workspace.update({ key: '1', title: 'New workspace title' })
+      client.workspace.update({
+        workspace: { key: '1', title: 'New workspace title' },
+      })
     ).resolves.toEqual({
       key: '1',
       title: 'New workspace title',
@@ -132,7 +140,7 @@ describe('workspace.leave', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.leave()
+      client.workspace.leave({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -140,7 +148,7 @@ describe('workspace.leave', () => {
 
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.leave('')).rejects.toMatchObject({
+    await expect(client.workspace.leave({ key: '' })).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
   });
@@ -154,7 +162,7 @@ describe('workspace.leave', () => {
         },
       },
     });
-    await expect(client.workspace.leave('1')).resolves.toEqual({
+    await expect(client.workspace.leave({ key: '1' })).resolves.toEqual({
       left: true,
     });
   });
@@ -165,7 +173,7 @@ describe('workspace.delete', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.delete()
+      client.workspace.delete({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -173,7 +181,7 @@ describe('workspace.delete', () => {
 
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.delete('')).rejects.toMatchObject({
+    await expect(client.workspace.delete({ key: '' })).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
   });
@@ -185,7 +193,7 @@ describe('workspace.delete', () => {
         result: true,
       },
     });
-    await expect(client.workspace.delete('1')).resolves.toEqual(true);
+    await expect(client.workspace.delete({ key: '1' })).resolves.toEqual(true);
   });
 });
 
@@ -194,7 +202,7 @@ describe('workspace.addUser', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.addUser()
+      client.workspace.addUser({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -202,14 +210,18 @@ describe('workspace.addUser', () => {
 
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.addUser('', 'userId')).rejects.toMatchObject({
+    await expect(
+      client.workspace.addUser({ key: '', userAccountId: 'userId' })
+    ).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
   });
 
   it('requires user ID', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.addUser('1', '')).rejects.toMatchObject({
+    await expect(
+      client.workspace.addUser({ key: '1', userAccountId: '' })
+    ).rejects.toMatchObject({
       message: 'User ID is required',
     });
   });
@@ -224,7 +236,9 @@ describe('workspace.addUser', () => {
         },
       },
     });
-    await expect(client.workspace.addUser('1', 'userId')).resolves.toEqual({
+    await expect(
+      client.workspace.addUser({ key: '1', userAccountId: 'userId' })
+    ).resolves.toEqual({
       key: '1',
       title: 'Workspace',
     });
@@ -236,7 +250,7 @@ describe('workspace.removeUser', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.removeUser()
+      client.workspace.removeUser({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -245,7 +259,7 @@ describe('workspace.removeUser', () => {
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workspace.removeUser('', 'userId')
+      client.workspace.removeUser({ key: '', userAccountId: 'userId' })
     ).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
@@ -253,7 +267,9 @@ describe('workspace.removeUser', () => {
 
   it('requires user ID', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.removeUser('1', '')).rejects.toMatchObject({
+    await expect(
+      client.workspace.removeUser({ key: '1', userAccountId: '' })
+    ).rejects.toMatchObject({
       message: 'User ID is required',
     });
   });
@@ -268,7 +284,9 @@ describe('workspace.removeUser', () => {
         },
       },
     });
-    await expect(client.workspace.removeUser('1', 'userId')).resolves.toEqual({
+    await expect(
+      client.workspace.removeUser({ key: '1', userAccountId: 'userId' })
+    ).resolves.toEqual({
       key: '1',
       title: 'Workspace',
     });
@@ -280,7 +298,7 @@ describe('workspace.addAdmin', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.addAdmin()
+      client.workspace.addAdmin({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -288,16 +306,18 @@ describe('workspace.addAdmin', () => {
 
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.addAdmin('', 'userId')).rejects.toMatchObject(
-      {
-        message: 'Workspace key is required',
-      }
-    );
+    await expect(
+      client.workspace.addAdmin({ key: '', userAccountId: 'userId' })
+    ).rejects.toMatchObject({
+      message: 'Workspace key is required',
+    });
   });
 
   it('requires user ID', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.addAdmin('1', '')).rejects.toMatchObject({
+    await expect(
+      client.workspace.addAdmin({ key: '1', userAccountId: '' })
+    ).rejects.toMatchObject({
       message: 'User ID is required',
     });
   });
@@ -312,7 +332,9 @@ describe('workspace.addAdmin', () => {
         },
       },
     });
-    await expect(client.workspace.addAdmin('1', 'userId')).resolves.toEqual({
+    await expect(
+      client.workspace.addAdmin({ key: '1', userAccountId: 'userId' })
+    ).resolves.toEqual({
       key: '1',
       title: 'Workspace',
     });
@@ -324,7 +346,7 @@ describe('workspace.removeAdmin', () => {
     const client = new GrinderyClient();
     await expect(
       // @ts-ignore
-      client.workspace.removeAdmin()
+      client.workspace.removeAdmin({})
     ).rejects.toMatchObject({
       message: 'Authentication required',
     });
@@ -333,7 +355,7 @@ describe('workspace.removeAdmin', () => {
   it('requires workspace key', async () => {
     const client = new GrinderyClient(mockedToken);
     await expect(
-      client.workspace.removeAdmin('', 'userId')
+      client.workspace.removeAdmin({ key: '', userAccountId: 'userId' })
     ).rejects.toMatchObject({
       message: 'Workspace key is required',
     });
@@ -341,7 +363,9 @@ describe('workspace.removeAdmin', () => {
 
   it('requires user ID', async () => {
     const client = new GrinderyClient(mockedToken);
-    await expect(client.workspace.removeAdmin('1', '')).rejects.toMatchObject({
+    await expect(
+      client.workspace.removeAdmin({ key: '1', userAccountId: '' })
+    ).rejects.toMatchObject({
       message: 'User ID is required',
     });
   });
@@ -356,7 +380,9 @@ describe('workspace.removeAdmin', () => {
         },
       },
     });
-    await expect(client.workspace.removeAdmin('1', 'userId')).resolves.toEqual({
+    await expect(
+      client.workspace.removeAdmin({ key: '1', userAccountId: 'userId' })
+    ).resolves.toEqual({
       key: '1',
       title: 'Workspace',
     });
