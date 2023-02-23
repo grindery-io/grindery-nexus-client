@@ -220,3 +220,50 @@ export const processDriver = (connector: Connector) => {
         : undefined,
   };
 };
+
+export const filterConnectors = (
+  connector: Connector,
+  access?: string,
+  userId?: string,
+  workspaceId?: string
+) => {
+  let res = false;
+  const connectorAccess = connector.access?.toLowerCase();
+  const connectorWorkspace = connector.workspace?.toLowerCase();
+  const user = userId?.toLowerCase();
+  const workspace = workspaceId?.toLowerCase();
+  switch (access) {
+    case 'public':
+      res = connector && (connectorAccess === 'public' || !connectorAccess);
+      break;
+    case 'beta':
+      res = Boolean(connector && connectorAccess === 'beta');
+      break;
+    case 'private':
+      res = Boolean(
+        connector &&
+          ((connectorAccess === 'private' &&
+            ((user && connectorWorkspace === user) ||
+              (workspace && connectorWorkspace === workspace))) ||
+            (connectorAccess === 'workspace' &&
+              workspace &&
+              connectorWorkspace === workspace))
+      );
+      break;
+    default:
+      res = Boolean(
+        connector &&
+          (connectorAccess === 'public' ||
+            connectorAccess === 'beta' ||
+            !connectorAccess ||
+            (connectorAccess === 'private' &&
+              user &&
+              connectorWorkspace === user) ||
+            (connectorAccess === 'private' &&
+              workspace &&
+              connectorWorkspace === workspace))
+      );
+      break;
+  }
+  return res;
+};

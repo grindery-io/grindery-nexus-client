@@ -36,7 +36,7 @@
     * [.saveWalletAddress(walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
-    * [.listDrivers(environment)](#NexusClient+listDrivers) ⇒ <code>Promise</code>
+    * [.listDrivers([environment], [access])](#NexusClient+listDrivers) ⇒ <code>Promise</code>
     * [.getDriver(driverKey, environment, enrich)](#NexusClient+getDriver) ⇒ <code>Promise</code>
     * [.listWorkspaces()](#NexusClient+listWorkspaces) ⇒ <code>Promise</code>
     * [.createWorkspace(workspace)](#NexusClient+createWorkspace) ⇒ <code>Promise</code>
@@ -254,7 +254,7 @@
 
 <a name="NexusClient+listDrivers"></a>
 
-### nexusClient.listDrivers(environment) ⇒ <code>Promise</code>
+### nexusClient.listDrivers([environment], [access]) ⇒ <code>Promise</code>
 <p>Gets list of drivers</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -263,7 +263,8 @@
 
 | Param | Type | Description |
 | --- | --- | --- |
-| environment | <code>string</code> | <p>Set environment for getting drivers. Optional.</p> |
+| [environment] | <code>string</code> | <p>Set environment for getting drivers. Optional.</p> |
+| [access] | <code>string</code> | <p>Filter connectors by access. One of <code>public</code>, <code>beta</code> or <code>private</code>. Optional. By default returns public, beta and user private connectors.</p> |
 
 <a name="NexusClient+getDriver"></a>
 

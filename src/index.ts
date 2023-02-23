@@ -11,6 +11,7 @@ import {
 } from './types';
 import {
   enrichDriver,
+  filterConnectors,
   processDriver,
   sendEngineHTTPRequest,
   sendEngineRequest,
@@ -470,10 +471,11 @@ class NexusClient {
    * Gets list of drivers
    *
    * @since 0.5.0
-   * @param {string} environment - Set environment for getting drivers. Optional.
+   * @param {string} [environment] - Set environment for getting drivers. Optional.
+   * @param {string} [access] - Filter connectors by access. One of `public`, `beta` or `private`. Optional. By default returns public, beta and user private connectors.
    * @returns {Promise} Promise object with an array of drivers
    */
-  async listDrivers(environment?: string): Promise<any> {
+  async listDrivers(environment?: string, access?: string): Promise<any> {
     let driversIndexURL = `${DRIVERS_URL}/_index.json`;
 
     if (environment && environment === 'staging') {
@@ -489,18 +491,13 @@ class NexusClient {
             ...res.data[key],
           })
         )
-        .filter(
-          (driver: Connector) =>
-            driver &&
-            (!driver.access ||
-              driver.access?.toLowerCase() === 'public' ||
-              (this.userId &&
-                driver.access?.toLowerCase() === 'private' &&
-                driver.user?.toLowerCase() === this.userId.toLowerCase()) ||
-              (this.workspaceId &&
-                driver.access?.toLowerCase() === 'workspace' &&
-                driver.workspace?.toLowerCase() ===
-                  this.workspaceId.toLowerCase()))
+        .filter((driver: Connector) =>
+          filterConnectors(
+            driver,
+            access,
+            this.userId || '',
+            this.workspaceId || ''
+          )
         );
       return drivers;
     } else {
