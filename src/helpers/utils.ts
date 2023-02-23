@@ -269,9 +269,12 @@ export const filterConnectors = (
     case 'private':
       res = Boolean(
         connector &&
-          connectorAccess === 'private' &&
-          ((userId && connectorWorkspace === user) ||
-            (workspace && connectorWorkspace === workspace))
+          ((connectorAccess === 'private' &&
+            ((user && connectorWorkspace === user) ||
+              (workspace && connectorWorkspace === workspace))) ||
+            (connectorAccess === 'workspace' &&
+              workspace &&
+              connectorWorkspace === workspace))
       );
       break;
     default:
