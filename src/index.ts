@@ -1044,6 +1044,54 @@ class NexusClient {
     }
     return await sendEngineRequest('or_getUserEmail', {}, this.token);
   }
+
+  /**
+   * Gets user properties
+   *
+   * @since 0.9.14
+   * @returns {Promise} Promise object with user properties if exists, or `null` if not.
+   */
+  async getUserProps(): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return await sendEngineRequest('or_getUserProps', {}, this.token);
+  }
+
+  /**
+   * Updates user properties
+   *
+   * @since 0.9.14
+   * @returns {Promise} Promise object with `true` if user properties were updated or `false` if not
+   */
+  async updateUserProps(props: {
+    email?: string;
+    firstname?: string;
+    lastname?: string;
+    interest?: string;
+    skill?: string;
+  }): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    return await sendEngineRequest('or_updateUserProps', { props }, this.token);
+  }
+
+  /**
+   * Sends JSON-RPC request to engine
+   *
+   * @since 0.9.14
+   * @returns {Promise} Promise object
+   */
+  async requestEngine(method: string, params: any): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!method) {
+      throw new Error('Method id required');
+    }
+    return await sendEngineRequest(method, params, this.token);
+  }
 }
 
 /**

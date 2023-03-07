@@ -59,6 +59,9 @@
     * [.updateUserEmail()](#NexusClient+updateUserEmail) ⇒ <code>Promise</code>
     * [.deleteUser()](#NexusClient+deleteUser) ⇒ <code>Promise</code>
     * [.getUserEmail()](#NexusClient+getUserEmail) ⇒ <code>Promise</code>
+    * [.getUserProps()](#NexusClient+getUserProps) ⇒ <code>Promise</code>
+    * [.updateUserProps()](#NexusClient+updateUserProps) ⇒ <code>Promise</code>
+    * [.requestEngine()](#NexusClient+requestEngine) ⇒ <code>Promise</code>
 
 <a name="new_NexusClient_new"></a>
 
@@ -536,6 +539,30 @@
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
 **Returns**: <code>Promise</code> - <p>Promise object with user email if exists, or <code>null</code> if not.</p>  
 **Since**: 0.9.12  
+<a name="NexusClient+getUserProps"></a>
+
+### nexusClient.getUserProps() ⇒ <code>Promise</code>
+<p>Gets user properties</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with user properties if exists, or <code>null</code> if not.</p>  
+**Since**: 0.9.14  
+<a name="NexusClient+updateUserProps"></a>
+
+### nexusClient.updateUserProps() ⇒ <code>Promise</code>
+<p>Updates user properties</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object with <code>true</code> if user properties were updated or <code>false</code> if not</p>  
+**Since**: 0.9.14  
+<a name="NexusClient+requestEngine"></a>
+
+### nexusClient.requestEngine() ⇒ <code>Promise</code>
+<p>Sends JSON-RPC request to engine</p>
+
+**Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
+**Returns**: <code>Promise</code> - <p>Promise object</p>  
+**Since**: 0.9.14  
 <a name="User"></a>
 
 ## User : <code>Object</code>
