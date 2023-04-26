@@ -369,6 +369,49 @@ class Connector {
       body
     );
   }
+
+  /**
+   * Run single action asynchronously. Authentication required.
+   *
+   * @since 0.9.0
+   * @param {Object} payload
+   * @param {Operation} payload.callbackUrl - Callback URL for success POST request
+   * @param {Operation} payload.step - Workflow step
+   * @param {Object} payload.input - Sample user input
+   * @param {string} [payload.environment] - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @returns {Promise<Object>} Promise object with action execution payload
+   */
+  async runActionAsync({
+    callbackUrl,
+    step,
+    input,
+    environment,
+  }: {
+    callbackUrl: string;
+    step: Operation;
+    input: unknown;
+    environment?: string;
+  }): Promise<any> {
+    if (!this.token) {
+      throw new Error('Authentication required');
+    }
+    if (!step) {
+      throw new Error('Workflow step object is required');
+    }
+    if (!input) {
+      throw new Error('Sample input object is required');
+    }
+    return await sendEngineRequest(
+      'or_runActionAsync',
+      {
+        callbackUrl,
+        step,
+        input,
+        environment: environment || 'production',
+      },
+      this.token
+    );
+  }
 }
 
 export default Connector;

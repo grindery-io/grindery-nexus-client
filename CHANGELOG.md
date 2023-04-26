@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] 2022-04-26
+
+### Added
+
+- `runActionAsync` method, to comply with [Zapier action timeout](<https://platform.zapier.com/docs/constraints#:~:text=a%20later%20step.-,Timeouts%20(actions),for%20example%2C%20file%20format%20conversion>)
+
 ## [1.0.1] 2022-02-22
 
 ### Fixed

@@ -37,6 +37,7 @@
         * [.runAction(payload)](#GrinderyClient.Connector+runAction) ⇒ <code>Promise.&lt;Object&gt;</code>
         * [.callInputProvider(payload)](#GrinderyClient.Connector+callInputProvider) ⇒ <code>Promise.&lt;Object&gt;</code>
         * [.callWebhook(payload)](#GrinderyClient.Connector+callWebhook) ⇒ <code>Promise</code>
+        * [.runActionAsync(payload)](#GrinderyClient.Connector+runActionAsync) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.Credentials](#GrinderyClient.Credentials)
         * [new Credentials()](#new_GrinderyClient.Credentials_new)
         * [.list(payload)](#GrinderyClient.Credentials+list) ⇒ <code>Promise</code>
@@ -125,6 +126,7 @@
     * [.runAction(payload)](#GrinderyClient.Connector+runAction) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.callInputProvider(payload)](#GrinderyClient.Connector+callInputProvider) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.callWebhook(payload)](#GrinderyClient.Connector+callWebhook) ⇒ <code>Promise</code>
+    * [.runActionAsync(payload)](#GrinderyClient.Connector+runActionAsync) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="new_GrinderyClient.Connector_new"></a>
 
@@ -240,6 +242,23 @@
 | payload.operationKey | <code>string</code> | <p>Trigger operation key</p> |
 | payload.body | <code>object</code> | <p>JSON body</p> |
 | [payload.environment] | <code>string</code> | <p>Specifiy execution environment. Use <code>staging</code> for staging environment. Optional.</p> |
+
+<a name="GrinderyClient.Connector+runActionAsync"></a>
+
+#### connector.runActionAsync(payload) ⇒ <code>Promise.&lt;Object&gt;</code>
+<p>Run single action asynchronously. Authentication required.</p>
+
+**Kind**: instance method of [<code>Connector</code>](#GrinderyClient.Connector)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - <p>Promise object with action execution payload</p>  
+**Since**: 0.9.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| payload | <code>Object</code> |  |
+| payload.callbackUrl | <code>Operation</code> | <p>Callback URL for success POST request</p> |
+| payload.step | <code>Operation</code> | <p>Workflow step</p> |
+| payload.input | <code>Object</code> | <p>Sample user input</p> |
+| [payload.environment] | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
 
 <a name="GrinderyClient.Credentials"></a>
 
