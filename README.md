@@ -14,8 +14,16 @@ or
 
 ### Import client class
 
+On frontend, for example in a ReactJS app:
+
 ```js
 import GrinderyClient from 'grindery-nexus-client';
+```
+
+On backend, for example in a NodeJS app:
+
+```js
+import { default as GrinderyClient } from 'grindery-nexus-client';
 ```
 
 ### Init client
