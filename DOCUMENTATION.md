@@ -390,6 +390,13 @@
 | payload.email | <code>string</code> | <p>User email</p> |
 | [payload.source] | <code>string</code> | <p>The source of request (optional)</p> |
 | [payload.app] | <code>string</code> | <p>The App to which access is requested (optional)</p> |
+| [payload.interest] | <code>string</code> | <p>User interests form field value (optional)</p> |
+| [payload.skill] | <code>string</code> | <p>User skills form field value (optional)</p> |
+| [payload.firstname] | <code>string</code> | <p>User firstname form field value (optional)</p> |
+| [payload.lastname] | <code>string</code> | <p>User lastname form field value (optional)</p> |
+| [payload.hutk] | <code>string</code> | <p>The tracking cookie token value used for HubSpot lead activity tracking. You can retrieve this value from the &quot;hubspotutk&quot; cookie placed in the user's browser by the HubSpot JavaScript Tracking Code. (optional)</p> |
+| [payload.pageName] | <code>string</code> | <p>The name or title of the page the submission happened on (optional)</p> |
+| [payload.ipAddress] | <code>string</code> | <p>The IP address of the visitor filling out the form (optional)</p> |
 
 <a name="GrinderyClient.User+saveWalletAddress"></a>
 

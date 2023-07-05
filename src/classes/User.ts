@@ -140,16 +140,37 @@ class User {
    * @param {string} payload.email - User email
    * @param {string} [payload.source] - The source of request (optional)
    * @param {string} [payload.app] - The App to which access is requested (optional)
+   * @param {string} [payload.interest] - User interests form field value (optional)
+   * @param {string} [payload.skill] - User skills form field value (optional)
+   * @param {string} [payload.firstname] - User firstname form field value (optional)
+   * @param {string} [payload.lastname] - User lastname form field value (optional)
+   * @param {string} [payload.hutk] - The tracking cookie token value used for HubSpot lead activity tracking. You can retrieve this value from the "hubspotutk" cookie placed in the user's browser by the HubSpot JavaScript Tracking Code. (optional)
+   * @param {string} [payload.pageName] - The name or title of the page the submission happened on (optional)
+   * @param {string} [payload.ipAddress] - The IP address of the visitor filling out the form (optional)
    * @returns {Promise<boolean>} Promise object with `true` on success
    */
   async requestEarlyAccess({
     email,
     source,
     app,
+    interest,
+    skill,
+    firstname,
+    lastname,
+    hutk,
+    pageName,
+    ipAddress,
   }: {
     email: string;
     source?: string;
     app?: string;
+    interest?: string;
+    skill?: string;
+    firstname?: string;
+    lastname?: string;
+    hutk?: string;
+    pageName?: string;
+    ipAddress?: string;
   }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -166,6 +187,13 @@ class User {
         email,
         source: source || '',
         app: app || '',
+        interest: interest || '',
+        skill: skill || '',
+        firstname: firstname || '',
+        lastname: lastname || '',
+        hutk: hutk || '',
+        pageName: pageName || '',
+        ipAddress: ipAddress || '',
       },
       this.token
     );
