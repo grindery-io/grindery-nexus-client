@@ -23,11 +23,11 @@ const WEB2_CONNECTORS_PATH =
 const WEB3_CONNECTORS_PATH =
   'https://api.github.com/repos/grindery-io/grindery-nexus-schema-v2/contents/cds/web3';
 
-const CHAINS_PATH = 'https://cds.grindery.org/chains';
-const CHAINS_STAGING_PATH = 'https://cds-staging.grindery.org/chains';
+const CHAINS_PATH = 'https://cds.grindery.io/chains';
+const CHAINS_STAGING_PATH = 'https://cds-staging.grindery.io/chains';
 
-const DRIVERS_URL = 'https://cds.grindery.org';
-const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.org';
+const DRIVERS_URL = 'https://cds.grindery.io';
+const DRIVERS_STAGING_URL = 'https://cds-staging.grindery.io';
 
 /**
  * Grindery Nexus Client
