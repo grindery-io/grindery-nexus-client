@@ -134,12 +134,30 @@ export const enrichDriver = (
                     },
                   ]
                 : []),
-              ...(trigger.operation?.inputFields || []).filter(
-                (field: Field) =>
-                  (connector.key === 'evmWallet' &&
-                    field.key !== '_grinderyChain') ||
-                  connector.key !== 'evmWallet'
-              ),
+              ...(trigger.operation?.inputFields || [])
+                .filter(
+                  (field: Field) =>
+                    (connector.key === 'evmWallet' &&
+                      field.key !== '_grinderyChain') ||
+                    connector.key !== 'evmWallet'
+                )
+                .map((field: Field) => ({
+                  ...(field.key === '_grinderyChain' &&
+                  !field.choices &&
+                  !field.computed &&
+                  !field.default
+                    ? {
+                        ...field,
+                        choices: blockchains.map((chain: Blockchain) => ({
+                          value: chain.value,
+                          label: chain.label,
+                          sample: chain.value,
+                          icon: chain.icon || undefined,
+                        })),
+                      }
+                    : field),
+                })),
+              ,
             ],
           },
         };
@@ -186,12 +204,29 @@ export const enrichDriver = (
                     },
                   ]
                 : []),
-              ...(action.operation?.inputFields || []).filter(
-                (field: Field) =>
-                  (connector.key === 'evmWallet' &&
-                    field.key !== '_grinderyChain') ||
-                  connector.key !== 'evmWallet'
-              ),
+              ...(action.operation?.inputFields || [])
+                .filter(
+                  (field: Field) =>
+                    (connector.key === 'evmWallet' &&
+                      field.key !== '_grinderyChain') ||
+                    connector.key !== 'evmWallet'
+                )
+                .map((field: Field) => ({
+                  ...(field.key === '_grinderyChain' &&
+                  !field.choices &&
+                  !field.computed &&
+                  !field.default
+                    ? {
+                        ...field,
+                        choices: blockchains.map((chain: Blockchain) => ({
+                          value: chain.value,
+                          label: chain.label,
+                          sample: chain.value,
+                          icon: chain.icon || undefined,
+                        })),
+                      }
+                    : field),
+                })),
             ],
           },
         };
