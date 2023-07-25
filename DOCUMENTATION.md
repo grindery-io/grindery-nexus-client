@@ -29,10 +29,10 @@
     * [.getWorkflowExecutions(workflowKey, since, until, limit)](#NexusClient+getWorkflowExecutions) ⇒ <code>Promise</code>
     * [.getWorkflowExecutionLog(executionId)](#NexusClient+getWorkflowExecutionLog) ⇒ <code>Promise</code>
     * [.isAllowedUser(app)](#NexusClient+isAllowedUser) ⇒ <code>Promise</code>
-    * [.testAction(step, input, environment)](#NexusClient+testAction) ⇒ <code>Promise</code>
+    * [.testAction(step, input, environment, source)](#NexusClient+testAction) ⇒ <code>Promise</code>
     * ~~[.getConnectors()](#NexusClient+getConnectors) ⇒ <code>Promise</code>~~
     * [.deleteWorkflow(key)](#NexusClient+deleteWorkflow) ⇒ <code>Promise</code>
-    * [.requestEarlyAccess(email, source, app)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
+    * [.requestEarlyAccess(email, source, app, trackSource)](#NexusClient+requestEarlyAccess) ⇒ <code>Promise</code>
     * [.saveWalletAddress(walletAddress, [email])](#NexusClient+saveWalletAddress) ⇒ <code>Promise</code>
     * [.callInputProvider(connectorKey, operationKey, body, environment)](#NexusClient+callInputProvider) ⇒ <code>Promise</code>
     * [.callWebhook(connectorKey, operationKey, body, environment)](#NexusClient+callWebhook) ⇒ <code>Promise</code>
@@ -52,7 +52,7 @@
     * [.updateAuthCredentials(key, displayName)](#NexusClient+updateAuthCredentials) ⇒ <code>Promise</code>
     * [.putConnectorSecrets(connectorId, secrets, environment)](#NexusClient+putConnectorSecrets) ⇒ <code>Promise</code>
     * [.saveNotificationsState(state, notificationToken)](#NexusClient+saveNotificationsState) ⇒ <code>Promise</code>
-    * [.runAction(step, input, environment)](#NexusClient+runAction) ⇒ <code>Promise</code>
+    * [.runAction(step, input, environment, source)](#NexusClient+runAction) ⇒ <code>Promise</code>
     * [.listChains(type, environment)](#NexusClient+listChains) ⇒ <code>Promise</code>
     * [.getUser()](#NexusClient+getUser) ⇒ [<code>User</code>](#User) \| <code>null</code>
     * [.isUserHasEmail()](#NexusClient+isUserHasEmail) ⇒ <code>Promise</code>
@@ -165,7 +165,7 @@
 
 <a name="NexusClient+testAction"></a>
 
-### nexusClient.testAction(step, input, environment) ⇒ <code>Promise</code>
+### nexusClient.testAction(step, input, environment, source) ⇒ <code>Promise</code>
 <p>Tests driver action. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -176,6 +176,7 @@
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
 | environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
+| source | <code>string</code> | <p>The source of request for event tracking (optional)</p> |
 
 <a name="NexusClient+getConnectors"></a>
 
@@ -200,7 +201,7 @@
 
 <a name="NexusClient+requestEarlyAccess"></a>
 
-### nexusClient.requestEarlyAccess(email, source, app) ⇒ <code>Promise</code>
+### nexusClient.requestEarlyAccess(email, source, app, trackSource) ⇒ <code>Promise</code>
 <p>Requests early access to Nexus app. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -211,6 +212,7 @@
 | email | <code>string</code> | <p>User email</p> |
 | source | <code>string</code> | <p>The source of request (optional)</p> |
 | app | <code>string</code> | <p>The App to which access is requested (optional)</p> |
+| trackSource | <code>string</code> | <p>The source of request for event tracking (optional)</p> |
 
 <a name="NexusClient+saveWalletAddress"></a>
 
@@ -472,7 +474,7 @@
 
 <a name="NexusClient+runAction"></a>
 
-### nexusClient.runAction(step, input, environment) ⇒ <code>Promise</code>
+### nexusClient.runAction(step, input, environment, source) ⇒ <code>Promise</code>
 <p>Run a single action. Authentication required.</p>
 
 **Kind**: instance method of [<code>NexusClient</code>](#NexusClient)  
@@ -484,6 +486,7 @@
 | step | <code>Operation</code> | <p>Workflow step</p> |
 | input |  | <p>Sample user input</p> |
 | environment | <code>string</code> | <p>Specifiy execution environment (<code>production</code> or <code>staging</code>). Optional. Default value <code>production</code>.</p> |
+| source | <code>string</code> | <p>The source of request for event tracking (optional)</p> |
 
 <a name="NexusClient+listChains"></a>
 

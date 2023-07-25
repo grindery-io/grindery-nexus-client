@@ -225,12 +225,14 @@ class NexusClient {
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
    * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @param {string} source - The source of request for event tracking (optional)
    * @returns {Promise} Promise object with action execution payload
    */
   async testAction(
     step: Operation,
     input: unknown,
-    environment?: string
+    environment?: string,
+    source?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -247,6 +249,7 @@ class NexusClient {
         step,
         input,
         environment: environment || 'production',
+        source: source || 'unknown',
       },
       this.token
     );
@@ -325,12 +328,14 @@ class NexusClient {
    * @param {string} email - User email
    * @param {string} source - The source of request (optional)
    * @param {string} app - The App to which access is requested (optional)
+   * @param {string} trackSource - The source of request for event tracking (optional)
    * @returns {Promise} Promise object with `true` on success
    */
   async requestEarlyAccess(
     email: string,
     source?: string,
-    app?: string
+    app?: string,
+    trackSource?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -347,6 +352,7 @@ class NexusClient {
         email,
         source: source || '',
         app: app || '',
+        trackSource: trackSource || 'unknown',
       },
       this.token
     );
@@ -900,12 +906,14 @@ class NexusClient {
    * @param {Operation} step - Workflow step
    * @param input - Sample user input
    * @param {string} environment - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @param {string} source - The source of request for event tracking (optional)
    * @returns {Promise} Promise object with action execution payload
    */
   async runAction(
     step: Operation,
     input: unknown,
-    environment?: string
+    environment?: string,
+    source?: string
   ): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -922,6 +930,7 @@ class NexusClient {
         step,
         input,
         environment: environment || 'production',
+        source: source || 'unknown',
       },
       this.token
     );
