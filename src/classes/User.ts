@@ -147,6 +147,7 @@ class User {
    * @param {string} [payload.hutk] - The tracking cookie token value used for HubSpot lead activity tracking. You can retrieve this value from the "hubspotutk" cookie placed in the user's browser by the HubSpot JavaScript Tracking Code. (optional)
    * @param {string} [payload.pageName] - The name or title of the page the submission happened on (optional)
    * @param {string} [payload.ipAddress] - The IP address of the visitor filling out the form (optional)
+   * @param {string} [payload.trackSource] - The source of event for tracking purposes (optional)
    * @returns {Promise<boolean>} Promise object with `true` on success
    */
   async requestEarlyAccess({
@@ -160,6 +161,7 @@ class User {
     hutk,
     pageName,
     ipAddress,
+    trackSource,
   }: {
     email: string;
     source?: string;
@@ -171,6 +173,7 @@ class User {
     hutk?: string;
     pageName?: string;
     ipAddress?: string;
+    trackSource?: string;
   }): Promise<boolean> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -194,6 +197,7 @@ class User {
         hutk: hutk || '',
         pageName: pageName || '',
         ipAddress: ipAddress || '',
+        trackSource: trackSource || 'unknown',
       },
       this.token
     );

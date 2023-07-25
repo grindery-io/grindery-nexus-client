@@ -200,16 +200,19 @@ class Connector {
    * @param {Operation} payload.step - Workflow step
    * @param {Object} payload.input - Sample user input
    * @param {string} [payload.environment=production] - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @param {string} [payload.source] - The source of event for tracking purposes. Optional.
    * @returns {Promise<Object>} Promise object with action execution payload
    */
   async testAction({
     step,
     input,
     environment,
+    source,
   }: {
     step: Operation;
     input: unknown;
     environment?: string;
+    source?: string;
   }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -226,6 +229,7 @@ class Connector {
         step,
         input,
         environment: environment || 'production',
+        source: source || 'unknown',
       },
       this.token
     );
@@ -239,16 +243,19 @@ class Connector {
    * @param {Operation} payload.step - Workflow step
    * @param {Object} payload.input - Sample user input
    * @param {string} [payload.environment] - Specifiy execution environment (`production` or `staging`). Optional. Default value `production`.
+   * @param {string} [payload.source] - The source of event for tracking purposes. Optional.
    * @returns {Promise<Object>} Promise object with action execution payload
    */
   async runAction({
     step,
     input,
     environment,
+    source,
   }: {
     step: Operation;
     input: unknown;
     environment?: string;
+    source?: string;
   }): Promise<any> {
     if (!this.token) {
       throw new Error('Authentication required');
@@ -265,6 +272,7 @@ class Connector {
         step,
         input,
         environment: environment || 'production',
+        source: source || 'unknown',
       },
       this.token
     );
